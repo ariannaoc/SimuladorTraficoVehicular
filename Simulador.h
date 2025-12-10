@@ -4,8 +4,7 @@
 namespace TraficoVehicular {
 	class Simulador
 	{
-		Auto* auto1;
-		Auto* auto2;
+		
 		Auto* autos[10];
 		// Lista de autos
 		// Semaforos

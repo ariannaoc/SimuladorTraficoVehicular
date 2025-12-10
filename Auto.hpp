@@ -13,9 +13,10 @@ namespace TraficoVehicular {
 			dx = 0;
 			dy = 0; // distancia recorrida en una unidad de tiempo  
 			tiempo_marcha = 0;
-			color = rand() % 3; // 0: auto, 1: camioneta, 2: camión
+			color = rand() % 6; 
 		}
 
+		
 		void setVelocidad(int dx, int dy) {
 			this->dx = dx;
 			this->dy = dy;
@@ -43,12 +44,24 @@ namespace TraficoVehicular {
 				yy = 0;
 				break;
 			case 1: // gris
-				xx = 200;
+				xx = 100;
 				yy = 0;
 				break;
 			case 2: // rosa
+				xx = 200;
+				yy = 0;
+				break;
+			case 3: // azul
 				xx = 400;
 				yy = 0;
+				break;
+			case 4: // amarillo
+				xx = 400;
+				yy = 190;
+				break;
+			case 5: // verde
+				xx = 500;
+				yy = 190;
 				break;
 			default:
 				break;
