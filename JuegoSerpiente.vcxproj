@@ -124,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="Simulador.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyForm.h">

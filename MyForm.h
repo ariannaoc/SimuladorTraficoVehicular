@@ -1,5 +1,6 @@
 #pragma once
-#include "Auto.hpp"
+#include "Simulador.h"
+
 namespace TraficoVehicular {
 
 	using namespace System;
@@ -16,13 +17,11 @@ namespace TraficoVehicular {
 	{
 	public:
 		bool iniciar = false;
-		Auto* autoptr;
-		Auto* autoptr1;
 		Bitmap^ fondo;
-		Bitmap^ sprite;
 		Bitmap^ autos;
 		Graphics^ graph;
 		BufferedGraphics^ bgraph;
+		Simulador* simulador;
 	private: System::Windows::Forms::Timer^ timer;
 	private: System::Windows::Forms::Button^ inicioBtn;
 	private: System::Windows::Forms::Label^ TitleLabel;
@@ -33,15 +32,11 @@ namespace TraficoVehicular {
 	public:
 		MyForm(void)
 		{
-			autoptr = new Auto(20, 500);
-			autoptr1 = new Auto(100, 500);
 			fondo = gcnew Bitmap("carretera.png");
 			// sprite 
 			autos = gcnew Bitmap("setAutos-noB.png");
+			simulador = new Simulador();
 			InitializeComponent();
-			//
-			//TODO: agregar código de constructor aquí
-			//
 		}
 
 	protected:
@@ -145,20 +140,10 @@ namespace TraficoVehicular {
 
 	}
 	private: System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e) {
-		timer->Interval = 200;
+		timer->Interval = 100;
 		bgraph->Graphics->DrawImage(fondo, 0, 0, 600, 600);
-		autoptr->Dibujar(bgraph, autos);
-		autoptr1->Dibujar(bgraph, autos);
+		simulador->IniciarSimulacion(iniciar, bgraph, autos);
 		bgraph->Render(graph);
-
-		if (iniciar)
-		{
-			autoptr->tomarDecision();
-			autoptr->Mover();
-			autoptr1->tomarDecision();
-			autoptr1->Mover();
-
-		}
 	}
 
 	};
