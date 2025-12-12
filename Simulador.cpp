@@ -5,7 +5,7 @@ using namespace TraficoVehicular;
 
 Simulador::Simulador() {
 	for(int i = 0; i < 10; i++) {
-		autos[i] = new Auto(50 + i * 50, 500);
+		autos[i] = new Auto(20 + i * 50, 500);
 	}
 }
 void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f) {

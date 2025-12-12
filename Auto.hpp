@@ -5,7 +5,7 @@ namespace TraficoVehicular {
 
 	public class Auto {
 	public:
-		int x, dx, y, dy, tiempo_marcha, color;
+		int x, dx, y, dy, tiempo_marcha, color, angulo;
 
 		Auto(int xx, int yy) {
 			x = xx;
@@ -13,10 +13,10 @@ namespace TraficoVehicular {
 			dx = 0;
 			dy = 0; // distancia recorrida en una unidad de tiempo  
 			tiempo_marcha = 0;
-			color = rand() % 6; 
+			color = rand() % 6;
+			angulo = rand() % 180;
 		}
 
-		
 		void setVelocidad(int dx, int dy) {
 			this->dx = dx;
 			this->dy = dy;
@@ -28,6 +28,7 @@ namespace TraficoVehicular {
 
 			tiempo_marcha++;
 			// decidir direccion
+			
 		}
 
 		void Mover() {
@@ -68,7 +69,24 @@ namespace TraficoVehicular {
 			}
 			Rectangle recorte(xx, yy, 100, 155);
 			Rectangle contenedor(x, y, 50, 70);
+
+			//GIRO DEL AUTO  
+			
+			// Guardar estado -- direccion 
+			System::Drawing::Drawing2D::GraphicsState^ estado = graph->Graphics->Save();
+
+			// Mover el origen l centro del sprite
+			float cx = contenedor.Width / 2.0f;
+			float cy = contenedor.Height / 2.0f;
+
+			graph->Graphics->TranslateTransform(cx, cy);
+			graph->Graphics->RotateTransform(angulo); // angulo de rotacion
+			graph->Graphics->TranslateTransform(-cx, -cy);
+			
 			graph->Graphics->DrawImage(fig, contenedor, recorte, GraphicsUnit::Pixel);
+			
+			//Restaurar estado
+			graph->Graphics->Restore(estado);
 		}
 
 	};
