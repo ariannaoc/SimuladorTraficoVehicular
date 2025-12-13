@@ -1,95 +1,99 @@
 #pragma once
 #include <cstdlib>
+#include <cmath>
 using namespace System::Drawing;
+
 namespace TraficoVehicular {
 
 	public class Auto {
 	public:
-		int x, dx, y, dy, tiempo_marcha, color, angulo;
+		int x, y;
+		int velocidad;
+		int tiempo_marcha;
+		int color;
+		int angulo;        // dirección en grados
+		char direccion; // Norte, Sur, Este, Oeste
+		int altoAuto = 30;
+		int anchoAuto = 20;
+
 
 		Auto(int xx, int yy) {
 			x = xx;
 			y = yy;
-			dx = 0;
-			dy = 0; // distancia recorrida en una unidad de tiempo  
+			velocidad = 5;
 			tiempo_marcha = 0;
 			color = rand() % 6;
-			angulo = rand() % 180;
+			angulo = -90;
+			direccion = 'N';
 		}
 
-		void setVelocidad(int dx, int dy) {
-			this->dx = dx;
-			this->dy = dy;
+		void setVelocidad(int v) {
+			this->velocidad = v;
 		}
+
+		Point getPosicion() {
+			return Point(x, y);
+		}
+		void girar(int direccion) {
+			if (direccion == 'i') // izquierda
+				angulo -= 15;
+			else if (direccion == 'd') // derecha
+				angulo += 15;
+		}
+
 		void tomarDecision() {
-			// decidir velocidad 
-			if (tiempo_marcha % 5 == 0)
-				setVelocidad(0, rand() % 10 + 5);
+			if (tiempo_marcha % 50 == 0) {
+				// cambiar velocidad aleatoriamente
+				setVelocidad(rand() % 10 + 3);
+			}
+
+			if (getPosicion().Y <= 200)
+				girar('i');
 
 			tiempo_marcha++;
-			// decidir direccion
-			
 		}
 
 		void Mover() {
-			x += dx;
-			y -= dy;
-		}
-		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
-			int xx = 0;
-			int yy = 0;
-			switch (color)
-			{
-			case 0: // rojo
-				xx = 0;
-				yy = 0;
-				break;
-			case 1: // gris
-				xx = 100;
-				yy = 0;
-				break;
-			case 2: // rosa
-				xx = 200;
-				yy = 0;
-				break;
-			case 3: // azul
-				xx = 400;
-				yy = 0;
-				break;
-			case 4: // amarillo
-				xx = 400;
-				yy = 190;
-				break;
-			case 5: // verde
-				xx = 500;
-				yy = 190;
-				break;
-			default:
-				break;
-			}
-			Rectangle recorte(xx, yy, 100, 155);
-			Rectangle contenedor(x, y, 50, 70);
+			// convertir ángulo a radianes
+			float rad = angulo * 3.14159265f / 180.0f;
 
-			//GIRO DEL AUTO  
-			
-			// Guardar estado -- direccion 
+			// avanzar en la dirección del ángulo
+			x += (int)(velocidad * cos(rad));
+			y += (int)(velocidad * sin(rad));
+		}
+
+		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
+			int xx = 0, yy = 0;
+			switch (color) {
+			case 0: xx = 0;   yy = 0;   break; // rojo
+			case 1: xx = 100; yy = 0;   break; // gris
+			case 2: xx = 200; yy = 0;   break; // rosa
+			case 3: xx = 400; yy = 0;   break; // azul
+			case 4: xx = 400; yy = 190; break; // amarillo
+			case 5: xx = 500; yy = 190; break; // verde
+			}
+
+			Rectangle recorte(xx, yy, 100, 155);
+			Rectangle contenedor(x, y, anchoAuto, altoAuto);
+
+			// Guardar estado gráfico
 			System::Drawing::Drawing2D::GraphicsState^ estado = graph->Graphics->Save();
 
-			// Mover el origen l centro del sprite
-			float cx = contenedor.Width / 2.0f;
-			float cy = contenedor.Height / 2.0f;
-
+			// trasladar origen al centro del sprite
+			float cx = x + contenedor.Width / 2.0f;
+			float cy = y + contenedor.Height / 2.0f;
 			graph->Graphics->TranslateTransform(cx, cy);
-			graph->Graphics->RotateTransform(angulo); // angulo de rotacion
+			graph->Graphics->RotateTransform((float)(angulo + 90)); // 90°
 			graph->Graphics->TranslateTransform(-cx, -cy);
-			
+
+			// dibujar sprite rotado
 			graph->Graphics->DrawImage(fig, contenedor, recorte, GraphicsUnit::Pixel);
-			
-			//Restaurar estado
+
+			// restaurar estado
 			graph->Graphics->Restore(estado);
 		}
-
 	};
+}
 
-};
+
 

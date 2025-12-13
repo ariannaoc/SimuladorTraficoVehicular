@@ -18,6 +18,7 @@ namespace TraficoVehicular {
 	public:
 		bool iniciar = false;
 		Bitmap^ fondo;
+		Bitmap^ brujula;
 		Bitmap^ autos;
 		Graphics^ graph;
 		BufferedGraphics^ bgraph;
@@ -33,6 +34,9 @@ namespace TraficoVehicular {
 		MyForm(void)
 		{
 			fondo = gcnew Bitmap("carretera.png");
+			//brujula= gcnew Bitmap("norte.png");
+			brujula= gcnew Bitmap("brujula.png");
+			
 			// sprite 
 			autos = gcnew Bitmap("setAutos-noB.png");
 			simulador = new Simulador();
@@ -143,6 +147,7 @@ namespace TraficoVehicular {
 		timer->Interval = 100;
 		bgraph->Graphics->DrawImage(fondo, 0, 0, 600, 600);
 		simulador->IniciarSimulacion(iniciar, bgraph, autos);
+		bgraph->Graphics->DrawImage(brujula, 500, 10, 70, 70);
 		bgraph->Render(graph);
 	}
 
