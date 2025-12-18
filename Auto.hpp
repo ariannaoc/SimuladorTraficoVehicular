@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdlib>
 #include <cmath>
+#include "Motor.hpp"
 using namespace System::Drawing;
 
 namespace TraficoVehicular {
@@ -9,8 +10,10 @@ namespace TraficoVehicular {
 	public:
 		int x, y;
 		int velocidad;
-		int tiempo_marcha;
+		int tiempo;
+		int marcha; // 1era 0-20km 2da 21-40km 3era 41-60km 4ta 61-80km 5ta 81-120km
 		int color;
+		Motor* motor;
 		int angulo;        // dirección en grados
 		char direccion; // Norte, Sur, Este, Oeste
 		int altoAuto = 30;
@@ -21,19 +24,26 @@ namespace TraficoVehicular {
 			x = xx;
 			y = yy;
 			velocidad = 5;
-			tiempo_marcha = 0;
+			tiempo = 0;
+			marcha = 0;
 			color = rand() % 6;
 			angulo = -90;
 			direccion = 'N';
 		}
 
-		void setVelocidad(int v) {
-			this->velocidad = v;
+		void setMotor(Motor* m) {
+			motor = m;
+		}
+
+		void setPosicion(int xx, int yy) {
+			x = xx;
+			y = yy;
 		}
 
 		Point getPosicion() {
 			return Point(x, y);
 		}
+
 		void girar(int direccion) {
 			if (direccion == 'i') // izquierda
 				angulo -= 15;
@@ -42,15 +52,14 @@ namespace TraficoVehicular {
 		}
 
 		void tomarDecision() {
-			if (tiempo_marcha % 50 == 0) {
-				// cambiar velocidad aleatoriamente
-				setVelocidad(rand() % 10 + 3);
+
+			tiempo++;
+
+			if (tiempo % 10 == 0 && marcha < 5) {
+				marcha++;
 			}
-
-			if (getPosicion().Y <= 200)
-				girar('i');
-
-			tiempo_marcha++;
+			motor->acelerar(marcha);
+			velocidad = motor->getVelocidad();
 		}
 
 		void Mover() {
