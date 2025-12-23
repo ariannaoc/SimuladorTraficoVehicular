@@ -7,9 +7,9 @@ namespace TraficoVehicular {
 
 	public class Motor {
 	private:
-		int marcha[6]; // Marcha actual del motor
+		int marcha[6]; // Limites de marcha
 		int velocidad; // Velocidad actual del motor
-		int marchaActual;
+		int marchaActual; // Marcha actual del motor
 
 
 	public:
@@ -25,15 +25,6 @@ namespace TraficoVehicular {
 
 		void acelerar(int ma) {
 			marchaActual = ma;
-
-			//if (marchaActual == 0) {
-			//	if (velocidad > 0) velocidad--; // Neutro reduce velocidad poco a poco
-			//}
-			//else if (velocidad < marcha[marchaActual]) {
-			//	// Si la velocidad es menor al límite de la marcha enviada (ma), aumenta
-			//	velocidad++;
-			//}
-
 
 			//cambiar la marcha 
 			if (marchaActual == 0 && velocidad > 0)
@@ -82,7 +73,7 @@ namespace TraficoVehicular {
 
 		int getVelocidad() {
 			return velocidad;
-		}	
+		}
 
 
 	};

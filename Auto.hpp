@@ -11,7 +11,7 @@ namespace TraficoVehicular {
 		int x, y;
 		int velocidad;
 		int tiempo;
-		int marcha; // 1era 0-20km 2da 21-40km 3era 41-60km 4ta 61-80km 5ta 81-120km
+		int marcha; 
 		int color;
 		Motor* motor;
 		int angulo;        // dirección en grados
@@ -51,14 +51,29 @@ namespace TraficoVehicular {
 				angulo += 15;
 		}
 
-		void tomarDecision() {
 
+		void tomarDecision() {
 			tiempo++;
 
-			if (tiempo % 10 == 0 && marcha < 5) {
-				marcha++;
+			// Lógica de cambio de marchas
+			if (tiempo % 5 == 0) {
+				if (tiempo < 28 && marcha < 5) {
+					marcha++; 
+				}
+				else if (tiempo > 28 && marcha > 0) {
+					marcha--;
+				}
 			}
-			motor->acelerar(marcha);
+
+			// condición de acelerar o frenar
+			if (tiempo < 28) {
+				motor->acelerar(marcha);
+			}
+			else {
+				motor->frenar(marcha);
+			}
+
+			// Actualizar la velocidad del Auto con la del Motor
 			velocidad = motor->getVelocidad();
 		}
 
