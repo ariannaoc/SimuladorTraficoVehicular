@@ -4,8 +4,7 @@
 namespace TraficoVehicular {
 	class Simulador
 	{
-
-		//Auto* autos[10];
+		int tiempo; 
 		// Lista de autos
 		ListaAutos* carros;
 		// Semaforos
@@ -17,5 +16,5 @@ namespace TraficoVehicular {
 		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig);
 
 	};
-
+   
 };

@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "Motor.hpp"
+using namespace System;
 using namespace System::Drawing;
 
 namespace TraficoVehicular {
@@ -11,10 +12,11 @@ namespace TraficoVehicular {
 		int x, y;
 		int velocidad;
 		int tiempo;
-		int marcha; 
+		int marcha;
 		int color;
 		Motor* motor;
 		int angulo;        // dirección en grados
+		int anguloObjetivo;
 		char direccion; // Norte, Sur, Este, Oeste
 		int altoAuto = 30;
 		int anchoAuto = 20;
@@ -28,6 +30,7 @@ namespace TraficoVehicular {
 			marcha = 0;
 			color = rand() % 6;
 			angulo = -90;
+			anguloObjetivo = 0; 
 			direccion = 'N';
 		}
 
@@ -44,11 +47,24 @@ namespace TraficoVehicular {
 			return Point(x, y);
 		}
 
-		void girar(int direccion) {
-			if (direccion == 'i') // izquierda
-				angulo -= 15;
-			else if (direccion == 'd') // derecha
-				angulo += 15;
+		String^ getInfoTexto() {
+			String^ info = "Velocidad: " + velocidad + " km/h\r\n" +
+				"Marcha: " + marcha + "\r\n" +
+				"Direccion: " + direccion;
+			return info;
+		}
+
+		void girar(int giro) {
+			if (giro == 'i')
+				angulo -= 90; // Giro de 90 grados
+			else if (giro == 'd')
+				angulo += 90;
+
+			// Actualizar dirección cardinal
+				if (angulo == 0 || angulo == 360) direccion = 'E';      // Este
+				else if (angulo == 90)           direccion = 'S';      // Sur
+				else if (angulo == 180)          direccion = 'O';      // Oeste
+				else if (angulo == 270 || angulo == -90) direccion = 'N'; // Norte
 		}
 
 
@@ -58,11 +74,15 @@ namespace TraficoVehicular {
 			// Lógica de cambio de marchas
 			if (tiempo % 5 == 0) {
 				if (tiempo < 28 && marcha < 5) {
-					marcha++; 
+					marcha++;
 				}
 				else if (tiempo > 28 && marcha > 0) {
 					marcha--;
 				}
+			}
+
+			if (tiempo == 50) {
+				girar('i'); // girar a la izquierda
 			}
 
 			// condición de acelerar o frenar
@@ -70,7 +90,7 @@ namespace TraficoVehicular {
 				motor->acelerar(marcha);
 			}
 			else {
-				motor->frenar(marcha);
+				//motor->frenar(marcha);
 			}
 
 			// Actualizar la velocidad del Auto con la del Motor
@@ -116,6 +136,7 @@ namespace TraficoVehicular {
 			// restaurar estado
 			graph->Graphics->Restore(estado);
 		}
+
 	};
 }
 

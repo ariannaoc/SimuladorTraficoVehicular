@@ -127,6 +127,7 @@
     <ClCompile Include="Simulador.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ListaAutos.hpp" />
     <ClInclude Include="Motor.hpp" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>

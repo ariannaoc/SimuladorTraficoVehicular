@@ -24,8 +24,14 @@ namespace TraficoVehicular {
 		BufferedGraphics^ bgraph;
 		Simulador* simulador;
 	private: System::Windows::Forms::Timer^ timer;
+	private: System::Windows::Forms::Panel^ panel;
+
+
+
+
 	private: System::Windows::Forms::Button^ inicioBtn;
-	private: System::Windows::Forms::Label^ TitleLabel;
+	private: System::Windows::Forms::Button^ detenerBtn;
+
 
 
 	private: System::ComponentModel::IContainer^ components;
@@ -34,9 +40,8 @@ namespace TraficoVehicular {
 		MyForm(void)
 		{
 			fondo = gcnew Bitmap("carretera.png");
-			//brujula= gcnew Bitmap("norte.png");
-			brujula= gcnew Bitmap("brujula.png");
-			
+			brujula = gcnew Bitmap("brujula.png");
+
 			// sprite 
 			autos = gcnew Bitmap("setAutos-noB.png");
 			simulador = new Simulador();
@@ -75,22 +80,27 @@ namespace TraficoVehicular {
 			this->components = (gcnew System::ComponentModel::Container());
 			this->inicioBtn = (gcnew System::Windows::Forms::Button());
 			this->timer = (gcnew System::Windows::Forms::Timer(this->components));
-			this->TitleLabel = (gcnew System::Windows::Forms::Label());
+			this->panel = (gcnew System::Windows::Forms::Panel());
+			this->detenerBtn = (gcnew System::Windows::Forms::Button());
+			this->panel->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// inicioBtn
 			// 
 			this->inicioBtn->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
+			this->inicioBtn->BackColor = System::Drawing::Color::SeaGreen;
 			this->inicioBtn->Cursor = System::Windows::Forms::Cursors::Hand;
-			this->inicioBtn->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 13.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->inicioBtn->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->inicioBtn->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->inicioBtn->Location = System::Drawing::Point(232, 471);
+			this->inicioBtn->ForeColor = System::Drawing::Color::PaleGreen;
+			this->inicioBtn->Location = System::Drawing::Point(51, 68);
 			this->inicioBtn->Name = L"inicioBtn";
-			this->inicioBtn->Size = System::Drawing::Size(308, 40);
+			this->inicioBtn->Size = System::Drawing::Size(113, 53);
 			this->inicioBtn->TabIndex = 0;
 			this->inicioBtn->Text = L"Iniciar";
-			this->inicioBtn->UseVisualStyleBackColor = true;
+			this->inicioBtn->UseVisualStyleBackColor = false;
 			this->inicioBtn->Click += gcnew System::EventHandler(this, &MyForm::inicioBtn_Click);
 			// 
 			// timer
@@ -98,42 +108,60 @@ namespace TraficoVehicular {
 			this->timer->Enabled = true;
 			this->timer->Tick += gcnew System::EventHandler(this, &MyForm::timer_Tick);
 			// 
-			// TitleLabel
+			// panel
 			// 
-			this->TitleLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
+			this->panel->BackColor = System::Drawing::Color::Silver;
+			this->panel->Controls->Add(this->inicioBtn);
+			this->panel->Controls->Add(this->detenerBtn);
+			this->panel->Dock = System::Windows::Forms::DockStyle::Left;
+			this->panel->Location = System::Drawing::Point(0, 0);
+			this->panel->MaximumSize = System::Drawing::Size(200, 750);
+			this->panel->Name = L"panel";
+			this->panel->Size = System::Drawing::Size(200, 703);
+			this->panel->TabIndex = 2;
+			// 
+			// detenerBtn
+			// 
+			this->detenerBtn->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
-			this->TitleLabel->AutoSize = true;
-			this->TitleLabel->BackColor = System::Drawing::Color::Transparent;
-			this->TitleLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->detenerBtn->BackColor = System::Drawing::Color::OrangeRed;
+			this->detenerBtn->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->detenerBtn->DialogResult = System::Windows::Forms::DialogResult::Cancel;
+			this->detenerBtn->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->detenerBtn->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->TitleLabel->Location = System::Drawing::Point(198, 124);
-			this->TitleLabel->Name = L"TitleLabel";
-			this->TitleLabel->Size = System::Drawing::Size(357, 92);
-			this->TitleLabel->TabIndex = 1;
-			this->TitleLabel->Text = L"Simulador de\r\nTráfico Vehicular";
-			this->TitleLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			this->detenerBtn->ForeColor = System::Drawing::Color::PeachPuff;
+			this->detenerBtn->Location = System::Drawing::Point(51, 68);
+			this->detenerBtn->Name = L"detenerBtn";
+			this->detenerBtn->Size = System::Drawing::Size(113, 53);
+			this->detenerBtn->TabIndex = 1;
+			this->detenerBtn->Text = L"Detener";
+			this->detenerBtn->UseVisualStyleBackColor = false;
+			this->detenerBtn->Visible = false;
+			this->detenerBtn->Click += gcnew System::EventHandler(this, &MyForm::detenerBtn_Click);
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(782, 653);
-			this->Controls->Add(this->TitleLabel);
-			this->Controls->Add(this->inicioBtn);
-			this->MaximumSize = System::Drawing::Size(800, 700);
+			this->CancelButton = this->detenerBtn;
+			this->ClientSize = System::Drawing::Size(982, 703);
+			this->Controls->Add(this->panel);
+			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"MyForm";
+			this->RightToLeft = System::Windows::Forms::RightToLeft::No;
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Tráfico Vehicular";
 			this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::Form_Paint);
+			this->panel->ResumeLayout(false);
 			this->ResumeLayout(false);
-			this->PerformLayout();
 
 		}
 #pragma endregion
 	private: System::Void inicioBtn_Click(System::Object^ sender, System::EventArgs^ e) {
 		inicioBtn->Visible = false;
-		TitleLabel->Visible = false;
+		detenerBtn->Visible = true;
 		iniciar = true;
 	}
 
@@ -143,12 +171,19 @@ namespace TraficoVehicular {
 		bgraph = context->Allocate(graph, this->ClientRectangle);
 
 	}
+
 	private: System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 		timer->Interval = 100;
-		bgraph->Graphics->DrawImage(fondo, 0, 0, 600, 600);
+		bgraph->Graphics->DrawImage(fondo, 150, 0, 600, 600);
 		simulador->IniciarSimulacion(iniciar, bgraph, autos);
-		bgraph->Graphics->DrawImage(brujula, 500, 10, 70, 70);
+		bgraph->Graphics->DrawImage(brujula, 650, 10, 70, 70);
 		bgraph->Render(graph);
+	}
+
+	private: System::Void detenerBtn_Click(System::Object^ sender, System::EventArgs^ e) {
+		iniciar = false;
+		detenerBtn->Visible = false;
+		inicioBtn->Visible = true;
 	}
 
 	};
