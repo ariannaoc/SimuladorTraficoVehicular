@@ -19,18 +19,23 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f) {
 	if (inicio) {
 		carros->tomarDecision();
 		carros->mover();
-		if (tiempo % 15 == 0) {
+
+		int intervalo = 40;
+		if (nivelTrafico == 2) intervalo = 20;
+		if (nivelTrafico == 3) intervalo = 10;
+
+		if (tiempo % intervalo == 0) {
 			Motor* m = new Motor(1, 2, 3, 4, 5);
 			Auto* a = new Auto(rand() % 500, 500);
 			a->setMotor(m);
 			carros->agregar(new Nodo(a));
-
-			
-			
 		}
 	}
 }
 
+void Simulador::setNivelTrafico(int nivel) {
+	this->nivelTrafico = nivel;
+}
 void Simulador::Dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
 	carros->dibujar(graph, fig);
 }

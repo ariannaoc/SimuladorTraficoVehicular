@@ -20,18 +20,20 @@ namespace TraficoVehicular {
 		char direccion; // Norte, Sur, Este, Oeste
 		int altoAuto = 30;
 		int anchoAuto = 20;
+		bool estado; // 0 estacionado, 1 andando 
 
 
 		Auto(int xx, int yy) {
 			x = xx;
 			y = yy;
-			velocidad = 5;
+			velocidad = 0;
 			tiempo = 0;
 			marcha = 0;
 			color = rand() % 6;
 			angulo = -90;
 			anguloObjetivo = 0; 
 			direccion = 'N';
+			estado = 0; 
 		}
 
 		void setMotor(Motor* m) {
@@ -48,7 +50,8 @@ namespace TraficoVehicular {
 		}
 
 		String^ getInfoTexto() {
-			String^ info = "Velocidad: " + velocidad + " km/h\r\n" +
+			String^ info = "Estado: " + estado ? "Estacionado" : "Andando" + "\r\n" +
+				"Velocidad: " + velocidad + " km/h\r\n" +
 				"Marcha: " + marcha + "\r\n" +
 				"Direccion: " + direccion;
 			return info;
