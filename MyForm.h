@@ -352,20 +352,20 @@ namespace TraficoVehicular {
 		resetBotones();
 		lowTrafficBtn->BackColor = System::Drawing::Color::SeaGreen;
 		nivelTrafico = 1;
-		simulador->setNivelTrafico(nivelTrafico);
+		simulador->setNivelTrafico(1);
 	}
 	private: System::Void medTrafficBtn_Click(System::Object^ sender, System::EventArgs^ e) {
 		resetBotones();
 		medTrafficBtn->BackColor = System::Drawing::Color::LemonChiffon;
 		nivelTrafico = 2;
-		simulador->setNivelTrafico(nivelTrafico);
+		simulador->setNivelTrafico(2);
 
 	}
 	private: System::Void highTrafficBtn_Click(System::Object^ sender, System::EventArgs^ e) {
 		resetBotones();
 		highTrafficBtn->BackColor = System::Drawing::Color::PeachPuff;
 		nivelTrafico = 3;
-		simulador->setNivelTrafico(nivelTrafico);
+		simulador->setNivelTrafico(3);
 
 	}
 	private: System::Void resetRadio() {

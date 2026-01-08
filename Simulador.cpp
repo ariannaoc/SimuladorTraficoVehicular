@@ -20,13 +20,13 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f) {
 		carros->tomarDecision();
 		carros->mover();
 
-		int intervalo = 40;
-		if (nivelTrafico == 2) intervalo = 20;
-		if (nivelTrafico == 3) intervalo = 10;
+		int intervalo = 25;
+		if (nivelTrafico == 2) intervalo = 15;
+		if (nivelTrafico == 3) intervalo = 5;
 
 		if (tiempo % intervalo == 0) {
 			Motor* m = new Motor(1, 2, 3, 4, 5);
-			Auto* a = new Auto(rand() % 500, 500);
+			Auto* a = new Auto(rand() % 500 +200, 500);
 			a->setMotor(m);
 			carros->agregar(new Nodo(a));
 		}

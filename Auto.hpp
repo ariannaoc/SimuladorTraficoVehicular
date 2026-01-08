@@ -2,10 +2,16 @@
 #include <cstdlib>
 #include <cmath>
 #include "Motor.hpp"
+
+
 using namespace System;
 using namespace System::Drawing;
 
 namespace TraficoVehicular {
+	const int altoAuto = 30;
+	const int anchoAuto = 20;
+
+	class ListaAutos;
 
 	public class Auto {
 	public:
@@ -17,10 +23,9 @@ namespace TraficoVehicular {
 		Motor* motor;
 		int angulo;        // dirección en grados
 		int anguloObjetivo;
-		char direccion; // Norte, Sur, Este, Oeste
-		int altoAuto = 30;
-		int anchoAuto = 20;
+		char direccion; // Norte, Sur, Este, Oeste .
 		bool estado; // 0 estacionado, 1 andando 
+		ListaAutos* autosCercanos;
 
 
 		Auto(int xx, int yy) {
@@ -31,9 +36,11 @@ namespace TraficoVehicular {
 			marcha = 0;
 			color = rand() % 6;
 			angulo = -90;
-			anguloObjetivo = 0; 
+			anguloObjetivo = 0;
 			direccion = 'N';
-			estado = 0; 
+			estado = 0;
+			autosCercanos = nullptr;
+			motor = nullptr;
 		}
 
 		void setMotor(Motor* m) {
@@ -56,6 +63,12 @@ namespace TraficoVehicular {
 				"Direccion: " + direccion;
 			return info;
 		}
+		// Campo visual del auto para detectar colisiones
+		int getCampoVisualx() { return x - anchoAuto / 2; }
+		int getCampoVisualy() { return y - 2 * altoAuto; }
+		int getCampoVisualAncho() { return anchoAuto * 2; }
+		int getCampoVisualAlto() { return altoAuto * 5; }
+
 
 		void girar(int giro) {
 			if (giro == 'i')
@@ -64,40 +77,56 @@ namespace TraficoVehicular {
 				angulo += 90;
 
 			// Actualizar dirección cardinal
-				if (angulo == 0 || angulo == 360) direccion = 'E';      // Este
-				else if (angulo == 90)           direccion = 'S';      // Sur
-				else if (angulo == 180)          direccion = 'O';      // Oeste
-				else if (angulo == 270 || angulo == -90) direccion = 'N'; // Norte
+			if (angulo == 0 || angulo == 360) direccion = 'E';      // Este
+			else if (angulo == 90)           direccion = 'S';      // Sur
+			else if (angulo == 180)          direccion = 'O';      // Oeste
+			else if (angulo == 270 || angulo == -90) direccion = 'N'; // Norte
 		}
 
 
 		void tomarDecision() {
 			tiempo++;
 
-			// Lógica de cambio de marchas
-			if (tiempo % 5 == 0) {
-				if (tiempo < 28 && marcha < 5) {
-					marcha++;
-				}
-				else if (tiempo > 28 && marcha > 0) {
-					marcha--;
-				}
+
+
+			//if (tiempo == 50) {
+			//	girar('i'); // girar a la izquierda
+			//}
+
+			bool alertaColision = false;
+
+			if (autosCercanos != nullptr /*&& autosCercanos->tieneAutos()*/) {
+				alertaColision = false; // cambiar a true si detecta colisión
 			}
 
-			if (tiempo == 50) {
-				girar('i'); // girar a la izquierda
-			}
 
-			// condición de acelerar o frenar
-			if (tiempo < 28) {
-				motor->acelerar(marcha);
+			if (alertaColision) {
+				// Frenazo
+				/*marcha = 0;
+				velocidad = 0;*/
+
+				//Frenar paulatinamente 
+				motor->frenar(marcha);
+
 			}
 			else {
-				//motor->frenar(marcha);
+				// Lógica de cambio de marchas
+				if (tiempo % 5 == 0) {
+					if (tiempo < 28 && marcha < 5) {
+						marcha++;
+					}
+					else if (tiempo > 28 && marcha > 0) {
+						marcha--;
+					}
+				}
+				// Acelerar paulatinamente
+				if (tiempo < 28) {
+					motor->acelerar(marcha);
+				}
 			}
-
 			// Actualizar la velocidad del Auto con la del Motor
 			velocidad = motor->getVelocidad();
+
 		}
 
 		void Mover() {
@@ -138,6 +167,10 @@ namespace TraficoVehicular {
 
 			// restaurar estado
 			graph->Graphics->Restore(estado);
+
+			// Solo para depuración: dibuja el campo visual en rojo transparente
+			Pen^ p = gcnew Pen(Color::FromArgb(100, Color::Red));
+			graph->Graphics->DrawRectangle(p, getCampoVisualx(), getCampoVisualy(), getCampoVisualAncho(), getCampoVisualAlto());
 		}
 
 	};
