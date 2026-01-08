@@ -1,7 +1,41 @@
 #include "Auto.hpp"      
-#include "ListaAutos.hpp" 
 
 namespace TraficoVehicular {
+
+	Auto::Auto(int xx, int yy) {
+		x = xx;
+		y = yy;
+		velocidad = 0;
+		tiempo = 0;
+		marcha = 0;
+		color = rand() % 6;
+		angulo = -90;
+		anguloObjetivo = 0;
+		direccion = 'N';
+		estado = 0;
+		autosCercanos = nullptr;
+		motor = nullptr;
+	}
+
+	Auto::~Auto() {
+		if (autosCercanos != nullptr) delete autosCercanos;
+	}
+
+	void Auto::setMotor(Motor* m) { motor = m; }
+
+	void Auto::setPosicion(int xx, int yy) {
+		x = xx;
+		y = yy;
+	}
+	Point Auto::getPosicion() { return Point(x, y); }
+
+	String^ Auto::getInfoTexto() {
+		String^ info = "Estado: " + estado ? "Estacionado" : "Andando" + "\r\n" +
+			"Velocidad: " + velocidad + " km/h\r\n" +
+			"Marcha: " + marcha + "\r\n" +
+			"Direccion: " + direccion;
+		return info;
+	}
 
 	void Auto::girar(int giro) {
 		if (giro == 'i')
@@ -16,9 +50,7 @@ namespace TraficoVehicular {
 		else if (angulo == 270 || angulo == -90) direccion = 'N'; // Norte
 	}
 
-
 	// Las dimensiones del campo visual cambian segun en angulo del auto 
-	
 	int Auto::getCampoVisualAncho() {
 		int a = ((angulo % 360) + 360) % 360;
 		if (a == 90 || a == 270) // N / S 
@@ -43,7 +75,6 @@ namespace TraficoVehicular {
 		return y + (altoAuto - getCampoVisualAlto()) / 2;
 	}
 
-
 	void Auto::tomarDecision() {
 		tiempo++;
 
@@ -53,7 +84,7 @@ namespace TraficoVehicular {
 
 		bool alertaColision = false;
 
-		if (autosCercanos != nullptr && autosCercanos->tieneAutos()) {
+		if (autosCercanos != nullptr && autosCercanos->tieneElementos()) {
 			alertaColision = true;
 		}
 

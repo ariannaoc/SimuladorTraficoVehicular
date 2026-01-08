@@ -1,51 +1,15 @@
 #pragma once
 #include "Auto.hpp"
 #include <iostream>
+
 namespace TraficoVehicular {
-	struct Nodo
+	
+	class ListaAutos : public Lista
 	{
-		Auto* autoPtr;
-		Nodo* next;
-
-		Nodo(Auto* carro) {
-			autoPtr = carro;
-			next = NULL;
-		}
-
-		~Nodo() {
-			next = NULL;
-		}
-
-	};
-	class ListaAutos
-	{
-	private:
-		Nodo* head;
+	
 	public:
-		ListaAutos() {
-			head = NULL;
-		}
-
-		//DESTRUCTOR
-		~ListaAutos() {
-			while (head != NULL) {
-				Nodo* aux = head;
-				head = head->next;
-				delete aux;
-			}
-		}
-		void agregar(Nodo* n) {
-			if (head == NULL)
-				head = n;
-			else {
-				n->next = head;
-				head = n;
-			}
-
-		}
-		void eliminar() {
-
-		}
+		ListaAutos() : Lista() {}
+		
 		void agregarMotores() {
 			Nodo* aux = head;
 			while (aux != NULL) {
@@ -75,31 +39,31 @@ namespace TraficoVehicular {
 		void tomarDecision() {
 			Nodo* aux = head;
 			while (aux != NULL) {
-				// Lista de autos cercanos para cada auto 
+				// Limpiar lista
 				if (aux->autoPtr->autosCercanos != nullptr) {
-					delete aux->autoPtr->autosCercanos;
+					aux->autoPtr->autosCercanos->limpiar();
 				}
-				aux->autoPtr->autosCercanos = new ListaAutos();
-
+				else {
+					aux->autoPtr->autosCercanos = new Lista();
+				}
 
 				Nodo* aux2 = head;
-				while (aux2 != NULL)
-				{
+				while (aux2 != NULL) {
 					if (aux != aux2) {
-						// Pasar lista de autos cercanos
-						if (visualizado(aux->autoPtr->x, aux->autoPtr->y, aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(), aux->autoPtr->getCampoVisualAncho(), aux->autoPtr->getCampoVisualAlto(), aux2->autoPtr->x, aux2->autoPtr->y))
+						if (visualizado(aux->autoPtr->x, aux->autoPtr->y,
+							aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(),
+							aux->autoPtr->getCampoVisualAncho(), aux->autoPtr->getCampoVisualAlto(),
+							aux2->autoPtr->x, aux2->autoPtr->y))
+						{
+							// Agregar autos a la lista de autos cercanos
 							aux->autoPtr->autosCercanos->agregar(new Nodo(aux2->autoPtr));
-
+						}
 					}
 					aux2 = aux2->next;
 				}
 				aux->autoPtr->tomarDecision();
 				aux = aux->next;
 			}
-		}
-
-		bool tieneAutos() {
-			return head != nullptr;
 		}
 
 		void mover() {
