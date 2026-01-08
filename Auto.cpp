@@ -1,0 +1,122 @@
+#include "Auto.hpp"      
+#include "ListaAutos.hpp" 
+
+namespace TraficoVehicular {
+
+	void Auto::girar(int giro) {
+		if (giro == 'i')
+			angulo -= 90; // Giro de 90 grados
+		else if (giro == 'd')
+			angulo += 90;
+
+		// Actualizar dirección cardinal
+		if (angulo == 0 || angulo == 360) direccion = 'E';      // Este
+		else if (angulo == 90)           direccion = 'S';      // Sur
+		else if (angulo == 180)          direccion = 'O';      // Oeste
+		else if (angulo == 270 || angulo == -90) direccion = 'N'; // Norte
+	}
+
+
+	// Las dimensiones del campo visual cambian segun en angulo del auto 
+	
+	int Auto::getCampoVisualAncho() {
+		int a = ((angulo % 360) + 360) % 360;
+		if (a == 90 || a == 270) // N / S 
+			return anchoAuto * 2;
+		else                    // E / O 
+			return altoAuto * 4;
+	}
+
+	int Auto::getCampoVisualAlto() {
+		int a = ((angulo % 360) + 360) % 360;
+		if (a == 90 || a == 270) // N / S
+			return altoAuto * 4;
+		else                     // E / O 
+			return anchoAuto * 2;
+	}
+
+	int Auto::getCampoVisualx() {
+		return x + (anchoAuto - getCampoVisualAncho()) / 2;
+	}
+
+	int Auto::getCampoVisualy() {
+		return y + (altoAuto - getCampoVisualAlto()) / 2;
+	}
+
+
+	void Auto::tomarDecision() {
+		tiempo++;
+
+		if (tiempo == 50) {
+			girar('i'); // girar a la izquierda
+		}
+
+		bool alertaColision = false;
+
+		if (autosCercanos != nullptr && autosCercanos->tieneAutos()) {
+			alertaColision = true;
+		}
+
+
+		if (alertaColision) {
+			// Frenar el auto gradualmente
+			this->motor->frenar(this->marcha);
+		}
+		else {
+			// Acelerar el auto gradualmente
+			if (this->tiempo % 5 == 0) {
+				if (this->tiempo < 28 && this->marcha < 5) this->marcha++;
+				else if (this->tiempo > 28 && this->marcha > 0) this->marcha--;
+			}
+			if (this->tiempo < 28) {
+				this->motor->acelerar(this->marcha);
+			}
+		}
+
+		// Actualizar la velocidad del Auto con la del Motor
+		this->velocidad = this->motor->getVelocidad();
+	}
+
+	void Auto::Mover() {
+		// Mover el auto según su velocidad y ángulo
+		float radianes = angulo * 3.14159f / 180.0f;
+		x += (int)(velocidad * cos(radianes));
+		y += (int)(velocidad * sin(radianes));
+	}
+
+	void Auto::Dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
+		int xx = 0, yy = 0;
+		switch (color) {
+		case 0: xx = 0;   yy = 0;   break; // rojo
+		case 1: xx = 100; yy = 0;   break; // gris
+		case 2: xx = 200; yy = 0;   break; // rosa
+		case 3: xx = 400; yy = 0;   break; // azul
+		case 4: xx = 400; yy = 190; break; // amarillo
+		case 5: xx = 500; yy = 190; break; // verde
+		}
+
+		Rectangle recorte(xx, yy, 100, 155);
+		Rectangle contenedor(x, y, anchoAuto, altoAuto);
+
+		// Guardar estado gráfico
+		System::Drawing::Drawing2D::GraphicsState^ estado = graph->Graphics->Save();
+
+		// trasladar origen al centro del sprite
+		float cx = x + contenedor.Width / 2.0f;
+		float cy = y + contenedor.Height / 2.0f;
+		graph->Graphics->TranslateTransform(cx, cy);
+		graph->Graphics->RotateTransform((float)(angulo + 90)); // 90°
+		graph->Graphics->TranslateTransform(-cx, -cy);
+
+		// dibujar sprite rotado
+		graph->Graphics->DrawImage(fig, contenedor, recorte, GraphicsUnit::Pixel);
+
+		// restaurar estado
+		graph->Graphics->Restore(estado);
+
+		// Solo para depuración: dibuja el campo visual en rojo transparente
+		Pen^ p = gcnew Pen(Color::FromArgb(100, Color::Red));
+		graph->Graphics->DrawRectangle(p, getCampoVisualx(), getCampoVisualy(), getCampoVisualAncho(), getCampoVisualAlto());
+
+	}
+}

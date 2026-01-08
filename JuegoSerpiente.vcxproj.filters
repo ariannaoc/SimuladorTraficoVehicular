@@ -21,6 +21,9 @@
     <ClCompile Include="Simulador.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="Auto.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyForm.h">
@@ -38,5 +41,8 @@
     <ClInclude Include="ListaAutos.hpp">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Notas.md" />
   </ItemGroup>
 </Project>

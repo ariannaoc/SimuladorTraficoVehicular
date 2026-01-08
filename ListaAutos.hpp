@@ -29,9 +29,9 @@ namespace TraficoVehicular {
 		//DESTRUCTOR
 		~ListaAutos() {
 			while (head != NULL) {
-				Nodo* aux = head;    
-				head = head->next;  
-				delete aux;          
+				Nodo* aux = head;
+				head = head->next;
+				delete aux;
 			}
 		}
 		void agregar(Nodo* n) {
@@ -67,7 +67,7 @@ namespace TraficoVehicular {
 					return true;
 				}
 			}
-			
+
 			return false;
 		}
 
@@ -75,19 +75,22 @@ namespace TraficoVehicular {
 		void tomarDecision() {
 			Nodo* aux = head;
 			while (aux != NULL) {
+				// Lista de autos cercanos para cada auto 
+				if (aux->autoPtr->autosCercanos != nullptr) {
+					delete aux->autoPtr->autosCercanos;
+				}
+				aux->autoPtr->autosCercanos = new ListaAutos();
+
+
 				Nodo* aux2 = head;
 				while (aux2 != NULL)
 				{
-					// Limpiar lista de autos cercanos
-					if (aux->autoPtr->autosCercanos != nullptr) {
-						delete aux->autoPtr->autosCercanos;
+					if (aux != aux2) {
+						// Pasar lista de autos cercanos
+						if (visualizado(aux->autoPtr->x, aux->autoPtr->y, aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(), aux->autoPtr->getCampoVisualAncho(), aux->autoPtr->getCampoVisualAlto(), aux2->autoPtr->x, aux2->autoPtr->y))
+							aux->autoPtr->autosCercanos->agregar(new Nodo(aux2->autoPtr));
+
 					}
-					// Crear lista de autos cercanos
-					aux->autoPtr->autosCercanos = new ListaAutos();
-					
-					// Pasar lista de autos cercanos
-					if (visualizado(aux->autoPtr->x, aux->autoPtr->y, aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(), aux->autoPtr->getCampoVisualAncho(), aux->autoPtr->getCampoVisualAlto(), aux2->autoPtr->x, aux2->autoPtr->y))
-						aux->autoPtr->autosCercanos->agregar(new Nodo(aux2->autoPtr));
 					aux2 = aux2->next;
 				}
 				aux->autoPtr->tomarDecision();

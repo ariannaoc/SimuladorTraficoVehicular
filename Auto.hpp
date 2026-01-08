@@ -43,18 +43,14 @@ namespace TraficoVehicular {
 			motor = nullptr;
 		}
 
-		void setMotor(Motor* m) {
-			motor = m;
-		}
+		void setMotor(Motor* m) { motor = m; }
 
 		void setPosicion(int xx, int yy) {
 			x = xx;
 			y = yy;
 		}
 
-		Point getPosicion() {
-			return Point(x, y);
-		}
+		Point getPosicion() { return Point(x, y); }
 
 		String^ getInfoTexto() {
 			String^ info = "Estado: " + estado ? "Estacionado" : "Andando" + "\r\n" +
@@ -64,117 +60,21 @@ namespace TraficoVehicular {
 			return info;
 		}
 		// Campo visual del auto para detectar colisiones
-		int getCampoVisualx() { return x - anchoAuto / 2; }
-		int getCampoVisualy() { return y - 2 * altoAuto; }
-		int getCampoVisualAncho() { return anchoAuto * 2; }
-		int getCampoVisualAlto() { return altoAuto * 5; }
+		int getCampoVisualx();
+		int getCampoVisualy();
+		int getCampoVisualAncho();
+		int getCampoVisualAlto();
 
 
-		void girar(int giro) {
-			if (giro == 'i')
-				angulo -= 90; // Giro de 90 grados
-			else if (giro == 'd')
-				angulo += 90;
+		void girar(int giro);
 
-			// Actualizar dirección cardinal
-			if (angulo == 0 || angulo == 360) direccion = 'E';      // Este
-			else if (angulo == 90)           direccion = 'S';      // Sur
-			else if (angulo == 180)          direccion = 'O';      // Oeste
-			else if (angulo == 270 || angulo == -90) direccion = 'N'; // Norte
-		}
+		void tomarDecision();
 
+		void Mover();
 
-		void tomarDecision() {
-			tiempo++;
-
-
-
-			//if (tiempo == 50) {
-			//	girar('i'); // girar a la izquierda
-			//}
-
-			bool alertaColision = false;
-
-			if (autosCercanos != nullptr /*&& autosCercanos->tieneAutos()*/) {
-				alertaColision = false; // cambiar a true si detecta colisión
-			}
-
-
-			if (alertaColision) {
-				// Frenazo
-				/*marcha = 0;
-				velocidad = 0;*/
-
-				//Frenar paulatinamente 
-				motor->frenar(marcha);
-
-			}
-			else {
-				// Lógica de cambio de marchas
-				if (tiempo % 5 == 0) {
-					if (tiempo < 28 && marcha < 5) {
-						marcha++;
-					}
-					else if (tiempo > 28 && marcha > 0) {
-						marcha--;
-					}
-				}
-				// Acelerar paulatinamente
-				if (tiempo < 28) {
-					motor->acelerar(marcha);
-				}
-			}
-			// Actualizar la velocidad del Auto con la del Motor
-			velocidad = motor->getVelocidad();
-
-		}
-
-		void Mover() {
-			// convertir ángulo a radianes
-			float rad = angulo * 3.14159265f / 180.0f;
-
-			// avanzar en la dirección del ángulo
-			x += (int)(velocidad * cos(rad));
-			y += (int)(velocidad * sin(rad));
-		}
-
-		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
-			int xx = 0, yy = 0;
-			switch (color) {
-			case 0: xx = 0;   yy = 0;   break; // rojo
-			case 1: xx = 100; yy = 0;   break; // gris
-			case 2: xx = 200; yy = 0;   break; // rosa
-			case 3: xx = 400; yy = 0;   break; // azul
-			case 4: xx = 400; yy = 190; break; // amarillo
-			case 5: xx = 500; yy = 190; break; // verde
-			}
-
-			Rectangle recorte(xx, yy, 100, 155);
-			Rectangle contenedor(x, y, anchoAuto, altoAuto);
-
-			// Guardar estado gráfico
-			System::Drawing::Drawing2D::GraphicsState^ estado = graph->Graphics->Save();
-
-			// trasladar origen al centro del sprite
-			float cx = x + contenedor.Width / 2.0f;
-			float cy = y + contenedor.Height / 2.0f;
-			graph->Graphics->TranslateTransform(cx, cy);
-			graph->Graphics->RotateTransform((float)(angulo + 90)); // 90°
-			graph->Graphics->TranslateTransform(-cx, -cy);
-
-			// dibujar sprite rotado
-			graph->Graphics->DrawImage(fig, contenedor, recorte, GraphicsUnit::Pixel);
-
-			// restaurar estado
-			graph->Graphics->Restore(estado);
-
-			// Solo para depuración: dibuja el campo visual en rojo transparente
-			Pen^ p = gcnew Pen(Color::FromArgb(100, Color::Red));
-			graph->Graphics->DrawRectangle(p, getCampoVisualx(), getCampoVisualy(), getCampoVisualAncho(), getCampoVisualAlto());
-		}
+		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig);
 
 	};
 }
-
 
 
