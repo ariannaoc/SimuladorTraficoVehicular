@@ -2,16 +2,16 @@
 
 namespace TraficoVehicular {
 
-	Auto::Auto(int xx, int yy) {
+	Auto::Auto(int xx, int yy, int direccion) {
 		x = xx;
 		y = yy;
 		velocidad = 0;
 		tiempo = 0;
 		marcha = 0;
 		color = rand() % 6;
-		angulo = -90;
+		angulo = direccion == 1 ? 90 : direccion == 2 ? 0 : direccion == 3 ? 180 : 270;
 		anguloObjetivo = 0;
-		direccion = 'N';
+		direccion = direccion;
 		estado = 0;
 		autosCercanos = nullptr;
 		motor = nullptr;
@@ -30,10 +30,21 @@ namespace TraficoVehicular {
 	Point Auto::getPosicion() { return Point(x, y); }
 
 	String^ Auto::getInfoTexto() {
-		String^ info = "Estado: " + estado ? "Estacionado" : "Andando" + "\r\n" +
+		
+		String^ estadoTxt = (estado == 1) ? "Estacionado" : "Andando";
+		String^ direccionTxt;
+		switch (direccion) {
+		case 0: direccionTxt = "Norte"; break;
+		case 1: direccionTxt = "Sur";   break;
+		case 2: direccionTxt = "Este";  break;
+		case 3: direccionTxt = "Oeste"; break;
+		}
+
+		String^ info = "Estado: " + estadoTxt + "\r\n" +
 			"Velocidad: " + velocidad + " km/h\r\n" +
 			"Marcha: " + marcha + "\r\n" +
-			"Direccion: " + direccion;
+			"Direccion: " + direccionTxt + "\r\n"; 
+
 		return info;
 	}
 
@@ -44,10 +55,10 @@ namespace TraficoVehicular {
 			angulo += 90;
 
 		// Actualizar dirección cardinal
-		if (angulo == 0 || angulo == 360) direccion = 'E';      // Este
-		else if (angulo == 90)           direccion = 'S';      // Sur
-		else if (angulo == 180)          direccion = 'O';      // Oeste
-		else if (angulo == 270 || angulo == -90) direccion = 'N'; // Norte
+		if (angulo == 0 || angulo == 360) direccion = 2;      // Este
+		else if (angulo == 90)           direccion = 1;      // Sur
+		else if (angulo == 180)          direccion = 3;      // Oeste
+		else if (angulo == 270 || angulo == -90) direccion = 0; // Norte
 	}
 
 	// Las dimensiones del campo visual cambian segun en angulo del auto 
@@ -78,9 +89,9 @@ namespace TraficoVehicular {
 	void Auto::tomarDecision() {
 		tiempo++;
 
-		if (tiempo == 50) {
-			girar('i'); // girar a la izquierda
-		}
+		//if (tiempo == 50) {
+		//	girar('i'); // girar a la izquierda
+		//}
 
 		bool alertaColision = false;
 

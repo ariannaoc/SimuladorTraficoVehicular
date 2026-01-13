@@ -23,11 +23,11 @@ namespace TraficoVehicular {
 		Motor* motor;
 		int angulo;        // dirección en grados
 		int anguloObjetivo;
-		char direccion; // Norte, Sur, Este, Oeste .
+		int direccion; // 0 Norte, 1 Sur, 2 Este, 3 Oeste .
 		bool estado; // 0 estacionado, 1 andando 
 		Lista* autosCercanos;
 
-		Auto(int xx, int yy);
+		Auto(int xx, int yy, int direccion);
 		~Auto();
 
 		void setMotor(Motor* m);

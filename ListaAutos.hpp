@@ -23,6 +23,7 @@ namespace TraficoVehicular {
 				aux = aux->next;
 			}
 		}
+		// Verifica si un auto esta dentro del campo visual de otro auto
 		bool visualizado(int x, int y, int cvx, int cvy, int anchocv, int altocv, int ax, int ay) {
 			// Dentro de limites horizontales
 			if (ax >= cvx && ax <= cvx + anchocv) {
@@ -31,7 +32,27 @@ namespace TraficoVehicular {
 					return true;
 				}
 			}
-
+			return false;
+		}
+		//  Verifica si hay un auto en ese espacio 
+		bool autoAqui(int x, int y) {
+			Nodo* aux = head;
+			while (aux != NULL) {
+				if (x < aux->autoPtr->x + anchoAuto &&
+					x + anchoAuto > aux->autoPtr->x &&
+					y < aux->autoPtr->y + altoAuto &&
+					y + altoAuto > aux->autoPtr->y) {
+					return true;
+				}
+				// Está en el campo de vision de otro auto
+				if (visualizado(aux->autoPtr->x, aux->autoPtr->y,
+					aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(),
+					aux->autoPtr->getCampoVisualAncho(), aux->autoPtr->getCampoVisualAlto(),
+					x, y)) {
+					return true; 
+				}
+				aux = aux->next;
+			}
 			return false;
 		}
 
