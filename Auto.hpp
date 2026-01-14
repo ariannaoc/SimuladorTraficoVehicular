@@ -5,6 +5,7 @@
 #include "Lista.hpp"
 
 
+
 using namespace System;
 using namespace System::Drawing;
 
@@ -13,7 +14,7 @@ namespace TraficoVehicular {
 	const int anchoAuto = 20;
 
 
-	public class Auto {
+	public ref class Auto {
 	public:
 		int x, y;
 		int velocidad;
@@ -25,7 +26,7 @@ namespace TraficoVehicular {
 		int anguloObjetivo;
 		int direccion; // 0 Norte, 1 Sur, 2 Este, 3 Oeste .
 		bool estado; // 0 estacionado, 1 andando 
-		Lista* autosCercanos;
+		Lista^ autosCercanos;
 
 		Auto(int xx, int yy, int direccion);
 		~Auto();
@@ -33,7 +34,7 @@ namespace TraficoVehicular {
 		void setMotor(Motor* m);
 		void setPosicion(int xx, int yy);
 		Point getPosicion();
-		String^ getInfoTexto();
+		String^ getInfo();
 		// Campo visual del auto para detectar colisiones
 		int getCampoVisualx();
 		int getCampoVisualy();
@@ -44,7 +45,7 @@ namespace TraficoVehicular {
 		void tomarDecision();
 		void Mover();
 		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig);
-
+		bool isHover(int mouseX, int mouseY);
 	};
 }
 

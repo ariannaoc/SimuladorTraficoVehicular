@@ -1,40 +1,36 @@
 #pragma once
 namespace TraficoVehicular {
 
-	class Auto;
+	ref class Auto;
 
-	struct Nodo {
-		Auto* autoPtr;
-		Nodo* next;
-		Nodo(Auto* carro) {
+	ref struct Nodo {
+		Auto^ autoPtr;
+		Nodo^ next;
+		Nodo(Auto^ carro) {
 			autoPtr = carro;
-			next = NULL;
+			next = nullptr;
 		}
 
 		~Nodo() {
-			next = NULL;
+			next = nullptr;
 		}
 	};
 
-	class Lista
+	ref class Lista
 	{
 	protected:
-		Nodo* head;
+		Nodo^ head;
 	public:
 		Lista() {
-			head = NULL;
+			head = nullptr;
 		}
 
 		~Lista() {
-			while (head != NULL) {
-				Nodo* aux = head;
-				head = head->next;
-				delete aux;
-			}
+			limpiar();
 		}
 
-		void agregar(Nodo* n) {
-			if (head == NULL)
+		void agregar(Nodo^ n) {
+			if (head == nullptr)
 				head = n;
 			else {
 				n->next = head;
@@ -44,7 +40,7 @@ namespace TraficoVehicular {
 		}
 		void limpiar() {
 			while (head != nullptr) {
-				Nodo* aux = head;
+				Nodo^ aux = head;
 				head = head->next;
 				delete aux;
 			}

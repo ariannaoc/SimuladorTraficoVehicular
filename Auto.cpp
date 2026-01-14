@@ -1,4 +1,5 @@
 #include "Auto.hpp"      
+#include <iostream>
 
 namespace TraficoVehicular {
 
@@ -29,21 +30,30 @@ namespace TraficoVehicular {
 	}
 	Point Auto::getPosicion() { return Point(x, y); }
 
-	String^ Auto::getInfoTexto() {
-		
+	String^ Auto::getInfo() {
+
 		String^ estadoTxt = (estado == 1) ? "Estacionado" : "Andando";
 		String^ direccionTxt;
 		switch (direccion) {
-		case 0: direccionTxt = "Norte"; break;
 		case 1: direccionTxt = "Sur";   break;
 		case 2: direccionTxt = "Este";  break;
 		case 3: direccionTxt = "Oeste"; break;
+		default: direccionTxt = "Norte"; break;
+		}
+		String^ colorTxt;
+		switch (color) {
+		case 0: colorTxt = "Rojo";   break; // rojo
+		case 1: colorTxt = "Gris";   break; // gris
+		case 2: colorTxt = "Rosa";   break; // rosa
+		case 3: colorTxt = "Azul";   break; // azul
+		case 4: colorTxt = "Amarillo"; break; // amarillo
+		case 5: colorTxt = "Verde"; break; // verde
 		}
 
-		String^ info = "Estado: " + estadoTxt + "\r\n" +
+		String^ info = "Color: " + colorTxt + "\r\n" +
+			"Estado: " + estadoTxt + "\r\n" +
 			"Velocidad: " + velocidad + " km/h\r\n" +
-			"Marcha: " + marcha + "\r\n" +
-			"Direccion: " + direccionTxt + "\r\n"; 
+			"Direccion: " + direccionTxt + "\r\n";
 
 		return info;
 	}
@@ -161,4 +171,17 @@ namespace TraficoVehicular {
 		graph->Graphics->DrawRectangle(p, getCampoVisualx(), getCampoVisualy(), getCampoVisualAncho(), getCampoVisualAlto());
 
 	}
+
+	bool Auto::isHover(int mouseX, int mouseY) {
+		// Posicion del mouse y del auto
+		//std::cout << "Mouse: (" << mouseX << "," << mouseY << ") Auto: (" << x << "," << y << ")" << std::endl;
+
+		if (mouseX >= x && mouseX <= (x + anchoAuto) &&
+			mouseY >= y && mouseY <= (y + altoAuto)) {
+			return true;
+		}
+		return false;
+	}
+
+
 }

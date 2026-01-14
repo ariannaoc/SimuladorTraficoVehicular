@@ -5,24 +5,26 @@ using namespace TraficoVehicular;
 
 Simulador::Simulador() {
 	tiempo = 0;
-	carros = new ListaAutos;
+	carros = gcnew ListaAutos;
 	// Crear 10 autos inicialmente 
 	for (int i = 0; i < 10; i++) {
 		if (!carros->autoAqui(20 + i * 50 + 200, 500)) {
 			//carros->agregar(new Nodo(new Auto(20 + i * 50 + 200, 500, rand() % 4)));
-			carros->agregar(new Nodo(new Auto(20 + i * 50 + 200, 500, 0)));
+			carros->agregar(gcnew Nodo(gcnew Auto(20 + i * 50 + 200, 500, 0)));
 		}
 	}
 
 	carros->agregarMotores();
 }
-void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f) {
+void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f, int mX, int mY) {
 	tiempo++;
 	this->Dibujar(g, f);
 	// Iniciar la simulación
 	if (inicio) {
 		carros->tomarDecision();
 		carros->mover();
+
+		infoAutos = carros->getInfoAutos(mX, mY);
 
 		int intervalo = 25;
 		if (nivelTrafico == 2) intervalo = 15;
@@ -35,9 +37,9 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f) {
 			if (tiempo % intervalo == 0) {
 				Motor* m = new Motor(1, 2, 3, 4, 5);
 				//Auto* a = new Auto(posicionX, posicionY, rand() % 4);
-				Auto* a = new Auto(posicionX, posicionY, 0);
+				Auto^ a = gcnew Auto(posicionX, posicionY, 0);
 				a->setMotor(m);
-				carros->agregar(new Nodo(a));
+				carros->agregar(gcnew Nodo(a));
 			}
 		}
 	}

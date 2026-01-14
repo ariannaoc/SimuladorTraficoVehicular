@@ -4,15 +4,15 @@
 
 namespace TraficoVehicular {
 	
-	class ListaAutos : public Lista
+	ref class ListaAutos : public Lista
 	{
 	
 	public:
 		ListaAutos() : Lista() {}
 		
 		void agregarMotores() {
-			Nodo* aux = head;
-			while (aux != NULL) {
+			Nodo^ aux = head;
+			while (aux != nullptr) {
 
 				//Asignar motor aleatoriamente usando probabilidad 
 				if (rand() % 99 < 50)
@@ -36,8 +36,8 @@ namespace TraficoVehicular {
 		}
 		//  Verifica si hay un auto en ese espacio 
 		bool autoAqui(int x, int y) {
-			Nodo* aux = head;
-			while (aux != NULL) {
+			Nodo^ aux = head;
+			while (aux != nullptr) {
 				if (x < aux->autoPtr->x + anchoAuto &&
 					x + anchoAuto > aux->autoPtr->x &&
 					y < aux->autoPtr->y + altoAuto &&
@@ -58,18 +58,18 @@ namespace TraficoVehicular {
 
 		// Gestion de los Autos
 		void tomarDecision() {
-			Nodo* aux = head;
-			while (aux != NULL) {
+			Nodo^ aux = head;
+			while (aux != nullptr) {
 				// Limpiar lista
 				if (aux->autoPtr->autosCercanos != nullptr) {
 					aux->autoPtr->autosCercanos->limpiar();
 				}
 				else {
-					aux->autoPtr->autosCercanos = new Lista();
+					aux->autoPtr->autosCercanos = gcnew Lista();
 				}
 
-				Nodo* aux2 = head;
-				while (aux2 != NULL) {
+				Nodo^ aux2 = head;
+				while (aux2 != nullptr) {
 					if (aux != aux2) {
 						if (visualizado(aux->autoPtr->x, aux->autoPtr->y,
 							aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(),
@@ -77,7 +77,7 @@ namespace TraficoVehicular {
 							aux2->autoPtr->x, aux2->autoPtr->y))
 						{
 							// Agregar autos a la lista de autos cercanos
-							aux->autoPtr->autosCercanos->agregar(new Nodo(aux2->autoPtr));
+							aux->autoPtr->autosCercanos->agregar(gcnew Nodo(aux2->autoPtr));
 						}
 					}
 					aux2 = aux2->next;
@@ -88,17 +88,28 @@ namespace TraficoVehicular {
 		}
 
 		void mover() {
-			Nodo* aux = head;
-			while (aux != NULL) {
+			Nodo^ aux = head;
+			while (aux != nullptr) {
 				aux->autoPtr->Mover();
 				aux = aux->next;
 			}
 		}
 		void dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
-			Nodo* aux = head;
-			while (aux != NULL) {
+			Nodo^ aux = head;
+			while (aux != nullptr) {
 
 				aux->autoPtr->Dibujar(graph, fig);
+				aux = aux->next;
+			}
+		}
+
+		String^ getInfoAutos(int mX, int mY) {
+			Nodo^ aux = head;
+			while (aux != nullptr) {
+				if (aux->autoPtr->isHover(mX, mY)) {
+					System::Console::WriteLine(aux->autoPtr->getInfo());
+					return aux->autoPtr->getInfo();
+				}
 				aux = aux->next;
 			}
 		}

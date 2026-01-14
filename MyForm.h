@@ -15,6 +15,9 @@ namespace TraficoVehicular {
 	/// </summary>
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
+	private:
+		int mouseX;
+		int mouseY;
 	public:
 		bool iniciar = false;
 		int nivelTrafico = 1; // 1: bajo, 2: medio, 3: alto
@@ -23,7 +26,11 @@ namespace TraficoVehicular {
 		Bitmap^ autos;
 		Graphics^ graph;
 		BufferedGraphics^ bgraph;
-		Simulador* simulador;
+		Simulador^ simulador;
+
+
+
+
 	private: System::Windows::Forms::Timer^ timer;
 	private: System::Windows::Forms::Panel^ panel;
 
@@ -44,6 +51,7 @@ namespace TraficoVehicular {
 
 	private: System::Windows::Forms::RadioButton^ vel1x;
 	private: System::Windows::Forms::RadioButton^ vel2x;
+	private: System::Windows::Forms::Label^ lblInfo;
 
 
 
@@ -59,7 +67,7 @@ namespace TraficoVehicular {
 
 			// sprite 
 			autos = gcnew Bitmap("setAutos-noB.png");
-			simulador = new Simulador();
+			simulador = gcnew Simulador();
 			InitializeComponent();
 		}
 
@@ -105,6 +113,7 @@ namespace TraficoVehicular {
 			this->lowTrafficBtn = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->detenerBtn = (gcnew System::Windows::Forms::Button());
+			this->lblInfo = (gcnew System::Windows::Forms::Label());
 			this->panel->SuspendLayout();
 			this->gbVelocidad->SuspendLayout();
 			this->SuspendLayout();
@@ -294,12 +303,27 @@ namespace TraficoVehicular {
 			this->detenerBtn->Visible = false;
 			this->detenerBtn->Click += gcnew System::EventHandler(this, &MyForm::detenerBtn_Click);
 			// 
+			// lblInfo
+			// 
+			this->lblInfo->AutoSize = true;
+			this->lblInfo->BackColor = System::Drawing::Color::LightGray;
+			this->lblInfo->Font = (gcnew System::Drawing::Font(L"Calibri", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->lblInfo->Location = System::Drawing::Point(206, 9);
+			this->lblInfo->Name = L"lblInfo";
+			this->lblInfo->Padding = System::Windows::Forms::Padding(5);
+			this->lblInfo->Size = System::Drawing::Size(92, 31);
+			this->lblInfo->TabIndex = 3;
+			this->lblInfo->Text = L"Info Autos";
+			this->lblInfo->Visible = false;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->detenerBtn;
 			this->ClientSize = System::Drawing::Size(982, 703);
+			this->Controls->Add(this->lblInfo);
 			this->Controls->Add(this->panel);
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
@@ -308,11 +332,13 @@ namespace TraficoVehicular {
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Tráfico Vehicular";
 			this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::Form_Paint);
+			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::mouseMove);
 			this->panel->ResumeLayout(false);
 			this->panel->PerformLayout();
 			this->gbVelocidad->ResumeLayout(false);
 			this->gbVelocidad->PerformLayout();
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -328,13 +354,25 @@ namespace TraficoVehicular {
 		bgraph = context->Allocate(graph, this->ClientRectangle);
 
 	}
+	private: System::Void mouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		mouseX = e->X;
+		mouseY = e->Y;
+	}
 
 	private: System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 		bgraph->Graphics->DrawImage(fondo, 150, 0, 600, 600);
-		simulador->IniciarSimulacion(iniciar, bgraph, autos);
+		simulador->IniciarSimulacion(iniciar, bgraph, autos, mouseX, mouseY);
+		if (simulador->infoAutos != nullptr) {
+			lblInfo->Visible = true;
+			lblInfo->Text = simulador->infoAutos;
+			lblInfo->Location = System::Drawing::Point(mouseX + 10, mouseY + 10);
+		} else {
+			lblInfo->Visible = false;
+		}
 		bgraph->Graphics->DrawImage(brujula, 650, 10, 70, 70);
 		bgraph->Render(graph);
 	}
+
 
 	private: System::Void detenerBtn_Click(System::Object^ sender, System::EventArgs^ e) {
 		iniciar = false;
@@ -388,7 +426,7 @@ namespace TraficoVehicular {
 	}
 	private: System::Void vel15x_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		if (vel15x->Checked) {
-			timer->Interval = 66; 
+			timer->Interval = 66;
 			resetRadio();
 			vel15x->BackColor = System::Drawing::Color::DarkSlateGray;
 			vel15x->ForeColor = System::Drawing::Color::LightGray;
@@ -396,7 +434,7 @@ namespace TraficoVehicular {
 	}
 	private: System::Void vel2x_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		if (vel2x->Checked) {
-			timer->Interval = 50; 
+			timer->Interval = 50;
 			resetRadio();
 			vel2x->BackColor = System::Drawing::Color::DarkSlateGray;
 			vel2x->ForeColor = System::Drawing::Color::LightGray;
