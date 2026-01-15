@@ -9,8 +9,8 @@ Simulador::Simulador() {
 	// Crear 10 autos inicialmente 
 	for (int i = 0; i < 10; i++) {
 		if (!carros->autoAqui(20 + i * 50 + 200, 500)) {
-			//carros->agregar(new Nodo(new Auto(20 + i * 50 + 200, 500, rand() % 4)));
-			carros->agregar(gcnew Nodo(gcnew Auto(20 + i * 50 + 200, 500, 0)));
+			//carros->agregar(gcnew Auto (20 + i * 50 + 200, 500, rand() % 4));
+			carros->agregar(gcnew Auto (20 + i * 50 + 200, 500, 0));
 		}
 	}
 
@@ -39,7 +39,7 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f, i
 				//Auto* a = new Auto(posicionX, posicionY, rand() % 4);
 				Auto^ a = gcnew Auto(posicionX, posicionY, 0);
 				a->setMotor(m);
-				carros->agregar(gcnew Nodo(a));
+				carros->agregar(a);
 			}
 		}
 	}

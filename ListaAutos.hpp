@@ -4,14 +4,14 @@
 
 namespace TraficoVehicular {
 	
-	ref class ListaAutos : public Lista
+	ref class ListaAutos : public Lista<Auto^>
 	{
 	private:
 		Auto^ autoHovered;
 		int hoverTimer;
 
 	public:
-		ListaAutos() : Lista() {
+		ListaAutos() {
 			autoHovered = nullptr;
 			hoverTimer = 2000; 
 		}
@@ -21,14 +21,14 @@ namespace TraficoVehicular {
 		}
 
 		void agregarMotores() {
-			Nodo^ aux = head;
+			Nodo<Auto^>^ aux = head;
 			while (aux != nullptr) {
 
 				//Asignar motor aleatoriamente usando probabilidad 
 				if (rand() % 99 < 50)
-					aux->autoPtr->setMotor(new Motor(1, 2, 3, 4, 5));
+					aux->contenido->setMotor(new Motor(1, 2, 4, 6, 10));
 				else
-					aux->autoPtr->setMotor(new Motor(1, 3, 5, 8, 12));
+					aux->contenido->setMotor(new Motor(1, 3, 5, 8, 12));
 
 				aux = aux->next;
 			}
@@ -46,18 +46,18 @@ namespace TraficoVehicular {
 		}
 		//  Verifica si hay un auto en ese espacio 
 		bool autoAqui(int x, int y) {
-			Nodo^ aux = head;
+			Nodo<Auto^>^ aux = head;
 			while (aux != nullptr) {
-				if (x < aux->autoPtr->x + anchoAuto &&
-					x + anchoAuto > aux->autoPtr->x &&
-					y < aux->autoPtr->y + altoAuto &&
-					y + altoAuto > aux->autoPtr->y) {
+				if (x < aux->contenido->x + anchoAuto &&
+					x + anchoAuto > aux->contenido->x &&
+					y < aux->contenido->y + altoAuto &&
+					y + altoAuto > aux->contenido->y) {
 					return true;
 				}
 				// Está en el campo de vision de otro auto
-				if (visualizado(aux->autoPtr->x, aux->autoPtr->y,
-					aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(),
-					aux->autoPtr->getCampoVisualAncho(), aux->autoPtr->getCampoVisualAlto(),
+				if (visualizado(aux->contenido->x, aux->contenido->y,
+					aux->contenido->getCampoVisualx(), aux->contenido->getCampoVisualy(),
+					aux->contenido->getCampoVisualAncho(), aux->contenido->getCampoVisualAlto(),
 					x, y)) {
 					return true; 
 				}
@@ -68,61 +68,63 @@ namespace TraficoVehicular {
 
 		// Gestion de los Autos
 		void tomarDecision() {
-			Nodo^ aux = head;
+			Nodo<Auto^>^ aux = head;
 			while (aux != nullptr) {
 				// Limpiar lista
-				if (aux->autoPtr->autosCercanos != nullptr) {
-					aux->autoPtr->autosCercanos->limpiar();
+				if (aux->contenido->autosCercanos != nullptr) {
+					aux->contenido->autosCercanos->limpiar();
 				}
 				else {
-					aux->autoPtr->autosCercanos = gcnew Lista();
+					aux->contenido->autosCercanos = gcnew Lista();
 				}
 
-				Nodo^ aux2 = head;
+				Nodo<Auto^>^ aux2 = head;
 				while (aux2 != nullptr) {
 					if (aux != aux2) {
-						// Verificar si el auto2 esta en el campo visual del auto1
-						if (visualizado(aux->autoPtr->x, aux->autoPtr->y,
-							aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(),
-							aux->autoPtr->getCampoVisualAncho(), aux->autoPtr->getCampoVisualAlto(),
-							aux2->autoPtr->x, aux2->autoPtr->y))
+						Auto^ otro = aux2->contenido;
+						// Verificar si el otro auto esta en el campo visual del auto1
+
+						if (visualizado(aux->contenido->x, aux->contenido->y,
+							aux->contenido->getCampoVisualx(), aux->contenido->getCampoVisualy(),
+							aux->contenido->getCampoVisualAncho(), aux->contenido->getCampoVisualAlto(),
+							otro->x, otro->y))
 						{
 							// Agregar autos a la lista de autos cercanos
-							aux->autoPtr->autosCercanos->agregar(gcnew Nodo(aux2->autoPtr));
+							aux->contenido->autosCercanos->agregar(otro);
 						}
 					}
 					aux2 = aux2->next;
 				}
-				aux->autoPtr->tomarDecision();
+				aux->contenido->tomarDecision();
 				aux = aux->next;
 			}
 		}
 
 		void mover() {
-			Nodo^ aux = head;
+			Nodo<Auto^>^ aux = head;
 			while (aux != nullptr) {
-				aux->autoPtr->Mover();
+				aux->contenido->Mover();
 				aux = aux->next;
 			}
 		}
 
 		void dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
-			Nodo^ aux = head;
+			Nodo<Auto^>^ aux = head;
 			while (aux != nullptr) {
 
-				aux->autoPtr->Dibujar(graph, fig);
+				aux->contenido->Dibujar(graph, fig);
 				aux = aux->next;
 			}
 		}
 
 		String^ getInfoAutos(int mX, int mY) {
-			Nodo^ aux = head;
+			Nodo<Auto^>^ aux = head;
 			while (aux != nullptr) {
 				// Si hay un auto bajo el mouse, mostrar su informacion
-				if (aux->autoPtr->isHover(mX, mY)) {
-					System::Console::WriteLine(aux->autoPtr->getInfo());
-					autoHovered = aux->autoPtr;
-					return aux->autoPtr->getInfo();
+				if (aux->contenido->isHover(mX, mY)) {
+					System::Console::WriteLine(aux->contenido->getInfo());
+					autoHovered = aux->contenido;
+					return aux->contenido->getInfo();
 				}
 				aux = aux->next;
 			}

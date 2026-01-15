@@ -3,11 +3,14 @@ namespace TraficoVehicular {
 
 	ref class Auto;
 
+	template <class T>
 	ref struct Nodo {
-		Auto^ autoPtr;
-		Nodo^ next;
-		Nodo(Auto^ carro) {
-			autoPtr = carro;
+		T contenido;
+		//Auto^ autoPtr;
+		Nodo<T>^ next;
+
+		Nodo(T n) {
+			contenido = n;
 			next = nullptr;
 		}
 
@@ -16,31 +19,26 @@ namespace TraficoVehicular {
 		}
 	};
 
+	template <class D>
 	ref class Lista
 	{
 	protected:
-		Nodo^ head;
+		Nodo<D>^ head;
 	public:
 		Lista() {
 			head = nullptr;
 		}
 
-		~Lista() {
-			limpiar();
-		}
 
-		void agregar(Nodo^ n) {
-			if (head == nullptr)
-				head = n;
-			else {
-				n->next = head;
-				head = n;
-			}
-
+		void agregar(D n) {
+			Nodo<D>^ nuevo = gcnew Nodo<D>(n);
+			nuevo->next = head;
+			head = nuevo;
 		}
+		
 		void limpiar() {
 			while (head != nullptr) {
-				Nodo^ aux = head;
+				Nodo<D>^ aux = head;
 				head = head->next;
 				delete aux;
 			}

@@ -3,6 +3,7 @@
 #include <cmath>
 #include "Motor.hpp"
 #include "Lista.hpp"
+#include "Carril.hpp"
 
 
 
@@ -10,9 +11,6 @@ using namespace System;
 using namespace System::Drawing;
 
 namespace TraficoVehicular {
-	const int altoAuto = 30;
-	const int anchoAuto = 20;
-
 
 	public ref class Auto {
 	public:
@@ -26,7 +24,8 @@ namespace TraficoVehicular {
 		int anguloObjetivo;
 		int direccion; // 0 Norte, 1 Sur, 2 Este, 3 Oeste .
 		bool estado; // 0 estacionado, 1 andando 
-		Lista^ autosCercanos;
+		Lista<Auto^>^ autosCercanos;
+		//Carril^ carrilActual;
 
 		Auto(int xx, int yy, int dir);
 		~Auto();
