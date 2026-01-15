@@ -28,7 +28,7 @@ namespace TraficoVehicular {
 		bool estado; // 0 estacionado, 1 andando 
 		Lista^ autosCercanos;
 
-		Auto(int xx, int yy, int direccion);
+		Auto(int xx, int yy, int dir);
 		~Auto();
 
 		void setMotor(Motor* m);

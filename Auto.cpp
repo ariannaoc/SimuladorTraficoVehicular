@@ -3,16 +3,16 @@
 
 namespace TraficoVehicular {
 
-	Auto::Auto(int xx, int yy, int direccion) {
+	Auto::Auto(int xx, int yy, int dir) {
 		x = xx;
 		y = yy;
 		velocidad = 0;
 		tiempo = 0;
 		marcha = 0;
 		color = rand() % 6;
-		angulo = direccion == 1 ? 90 : direccion == 2 ? 0 : direccion == 3 ? 180 : 270;
+		angulo = dir == 1 ? 90 : dir == 2 ? 0 : dir == 3 ? 180 : 270;
 		anguloObjetivo = 0;
-		direccion = direccion;
+		direccion = dir;
 		estado = 0;
 		autosCercanos = nullptr;
 		motor = nullptr;
@@ -32,7 +32,7 @@ namespace TraficoVehicular {
 
 	String^ Auto::getInfo() {
 
-		String^ estadoTxt = (estado == 1) ? "Estacionado" : "Andando";
+		String^ estadoTxt = (estado == 0) ? "Estacionado" : "Andando";
 		String^ direccionTxt;
 		switch (direccion) {
 		case 1: direccionTxt = "Sur";   break;
@@ -127,6 +127,15 @@ namespace TraficoVehicular {
 
 		// Actualizar la velocidad del Auto con la del Motor
 		this->velocidad = this->motor->getVelocidad();
+
+		// Cambiar estado 
+		if (this->velocidad > 0) {
+			this->estado = 1;
+		}
+		else {
+			this->estado = 0;
+		}
+
 	}
 
 	void Auto::Mover() {
