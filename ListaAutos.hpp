@@ -6,10 +6,20 @@ namespace TraficoVehicular {
 	
 	ref class ListaAutos : public Lista
 	{
-	
+	private:
+		Auto^ autoHovered;
+		int hoverTimer;
+
 	public:
-		ListaAutos() : Lista() {}
-		
+		ListaAutos() : Lista() {
+			autoHovered = nullptr;
+			hoverTimer = 2000; 
+		}
+
+		void setHoverTimer(int ht) {
+			if (ht >= 0) hoverTimer = ht;
+		}
+
 		void agregarMotores() {
 			Nodo^ aux = head;
 			while (aux != nullptr) {
@@ -71,6 +81,7 @@ namespace TraficoVehicular {
 				Nodo^ aux2 = head;
 				while (aux2 != nullptr) {
 					if (aux != aux2) {
+						// Verificar si el auto2 esta en el campo visual del auto1
 						if (visualizado(aux->autoPtr->x, aux->autoPtr->y,
 							aux->autoPtr->getCampoVisualx(), aux->autoPtr->getCampoVisualy(),
 							aux->autoPtr->getCampoVisualAncho(), aux->autoPtr->getCampoVisualAlto(),
@@ -94,6 +105,7 @@ namespace TraficoVehicular {
 				aux = aux->next;
 			}
 		}
+
 		void dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
 			Nodo^ aux = head;
 			while (aux != nullptr) {
@@ -106,11 +118,25 @@ namespace TraficoVehicular {
 		String^ getInfoAutos(int mX, int mY) {
 			Nodo^ aux = head;
 			while (aux != nullptr) {
+				// Si hay un auto bajo el mouse, mostrar su informacion
 				if (aux->autoPtr->isHover(mX, mY)) {
 					System::Console::WriteLine(aux->autoPtr->getInfo());
+					autoHovered = aux->autoPtr;
 					return aux->autoPtr->getInfo();
 				}
 				aux = aux->next;
+			}
+			// Si no hay auto bajo el mouse, mostrar la informacion del ultimo auto hover
+			if (autoHovered != nullptr) {
+				if (hoverTimer > 0) {
+					hoverTimer -= 100; 
+					return autoHovered->getInfo();
+				}
+				else {
+					// Se acabó el tiempo, limpia el puntero y resetea el timer
+					autoHovered = nullptr;
+					hoverTimer = 2000;
+				}
 			}
 		}
 

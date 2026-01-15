@@ -306,13 +306,14 @@ namespace TraficoVehicular {
 			// lblInfo
 			// 
 			this->lblInfo->AutoSize = true;
-			this->lblInfo->BackColor = System::Drawing::Color::LightGray;
-			this->lblInfo->Font = (gcnew System::Drawing::Font(L"Calibri", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lblInfo->BackColor = System::Drawing::Color::SlateGray;
+			this->lblInfo->Font = (gcnew System::Drawing::Font(L"Calibri", 10.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
+			this->lblInfo->ForeColor = System::Drawing::Color::White;
 			this->lblInfo->Location = System::Drawing::Point(206, 9);
 			this->lblInfo->Name = L"lblInfo";
 			this->lblInfo->Padding = System::Windows::Forms::Padding(5);
-			this->lblInfo->Size = System::Drawing::Size(92, 31);
+			this->lblInfo->Size = System::Drawing::Size(93, 31);
 			this->lblInfo->TabIndex = 3;
 			this->lblInfo->Text = L"Info Autos";
 			this->lblInfo->Visible = false;
