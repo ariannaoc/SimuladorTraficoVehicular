@@ -99,10 +99,6 @@ namespace TraficoVehicular {
 	void Auto::tomarDecision() {
 		tiempo++;
 
-		//if (tiempo == 50) {
-		//	girar('i'); // girar a la izquierda
-		//}
-
 		bool alertaColision = false;
 
 		if (autosCercanos != nullptr && autosCercanos->tieneElementos()) {

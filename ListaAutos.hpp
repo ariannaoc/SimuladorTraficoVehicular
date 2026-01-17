@@ -108,15 +108,6 @@ namespace TraficoVehicular {
 			}
 		}
 
-		void dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
-			Nodo<Auto^>^ aux = head;
-			while (aux != nullptr) {
-
-				aux->contenido->Dibujar(graph, fig);
-				aux = aux->next;
-			}
-		}
-
 		String^ getInfoAutos(int mX, int mY) {
 			Nodo<Auto^>^ aux = head;
 			while (aux != nullptr) {

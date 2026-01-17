@@ -1,6 +1,5 @@
 #pragma once
 #include "ListaAutos.hpp"
-#include "Carril.hpp"
 #include <string>
 
 namespace TraficoVehicular {
@@ -11,8 +10,10 @@ namespace TraficoVehicular {
 		int nivelTrafico; // 1: bajo, 2: medio, 3: alto
 		// Lista de autos
 		ListaAutos^ carros;
-		// Semaforos
 		//Lista Carriles
+		Lista<Carril^>^ carriles;
+
+		// Semaforos
 		
 	public:
 	
