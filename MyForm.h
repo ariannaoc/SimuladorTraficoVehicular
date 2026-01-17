@@ -24,6 +24,7 @@ namespace TraficoVehicular {
 		Bitmap^ fondo;
 		Bitmap^ brujula;
 		Bitmap^ autos;
+		Bitmap^ semaforo;
 		Graphics^ graph;
 		BufferedGraphics^ bgraph;
 		Simulador^ simulador;
@@ -67,6 +68,7 @@ namespace TraficoVehicular {
 
 			// sprite 
 			autos = gcnew Bitmap("setAutos-noB.png");
+			semaforo = gcnew Bitmap("Semaforos.png");
 			simulador = gcnew Simulador();
 			InitializeComponent();
 		}
@@ -362,7 +364,7 @@ namespace TraficoVehicular {
 
 	private: System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 		bgraph->Graphics->DrawImage(fondo, 150, 0, 600, 600);
-		simulador->IniciarSimulacion(iniciar, bgraph, autos, mouseX, mouseY);
+		simulador->IniciarSimulacion(iniciar, bgraph, autos, mouseX, mouseY, semaforo);
 		if (simulador->infoAutos != nullptr) {
 			lblInfo->Visible = true;
 			lblInfo->Text = simulador->infoAutos;

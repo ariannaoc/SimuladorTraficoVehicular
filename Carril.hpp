@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Semaforo.h"
 using namespace System::Drawing;
 using namespace System::Drawing::Drawing2D;
 namespace TraficoVehicular {
@@ -20,15 +20,16 @@ namespace TraficoVehicular {
 		int ancho; // Ancho del carril
 		int alto; // Largo del carril
 		Direccion sentido;
-		// Semaforo^ semaforo; // Semáforo asociado al carril 
+		Semaforo^ semaforo; // Semáforo asociado al carril 
 
 	public:
-		Carril(Direccion sentido, int xx, int yy, int alt) {
+		Carril(Direccion sentido, int xx, int yy, int alt, Semaforo^ sem) {
 			sentido = sentido;
 			x = xx +200;
 			y = yy;
 			ancho = anchoAuto + 20;
 			alto = alt;
+			semaforo = sem;
 
 		}
 

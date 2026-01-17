@@ -10,18 +10,18 @@ namespace TraficoVehicular {
 		int nivelTrafico; // 1: bajo, 2: medio, 3: alto
 		// Lista de autos
 		ListaAutos^ carros;
-		//Lista Carriles
 		Lista<Carril^>^ carriles;
+		Lista<Semaforo^>^ semaforos;
 
-		// Semaforos
+		
 		
 	public:
 	
 		String^ infoAutos;
 		Simulador();
-		void IniciarSimulacion(bool inicio, BufferedGraphics^ graph, Bitmap^ fig, int mX, int mY);
+		void IniciarSimulacion(bool inicio, BufferedGraphics^ graph, Bitmap^ autos, int mX, int mY, Bitmap^ semaforo);
 		void setNivelTrafico(int nivel);
-		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig);
+		void Dibujar(BufferedGraphics^ graph, Bitmap^ autos, Bitmap^ semaforo);
 
 	};
    

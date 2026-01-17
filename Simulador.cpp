@@ -6,10 +6,15 @@ using namespace TraficoVehicular;
 Simulador::Simulador() {
 	tiempo = 0;
 
-	carriles = gcnew Lista<Carril^>();
+	semaforos = gcnew Lista<Semaforo^>();
+	Semaforo^ semNorte = gcnew Semaforo(260, 50);
+	semaforos->agregar(semNorte);
+	semNorte->Cambiar();
 
-	Carril^ carrilNorte = gcnew Carril(Direccion::Norte, 210, 0, 600);
+	carriles = gcnew Lista<Carril^>();
+	Carril^ carrilNorte = gcnew Carril(Direccion::Norte, 210, 0, 600, semNorte);
 	carriles->agregar(carrilNorte);
+	
 
 	carros = gcnew ListaAutos;
 	// Crear 10 autos inicialmente 
@@ -22,13 +27,15 @@ Simulador::Simulador() {
 
 	carros->agregarMotores();
 }
-void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f, int mX, int mY) {
+void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ autos, int mX, int mY, Bitmap^ semaforo) {
 	tiempo++;
-	this->Dibujar(g, f);
-	Carril^ carrilNorte = carriles->getPrimero();
-	if (carrilNorte == nullptr) return;
+	this->Dibujar(g, autos, semaforo);
+	Semaforo^ auxSem = semaforos->getPrimero();
+	Carril^ carril = carriles->getPrimero();
+	if (carril == nullptr) return;
 	// Iniciar la simulación
 	if (inicio) {
+		auxSem->Cambiar();
 		carros->tomarDecision();
 		carros->mover();
 
@@ -38,7 +45,7 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f, i
 		if (nivelTrafico == 2) intervalo = 15;
 		if (nivelTrafico == 3) intervalo = 5;
 
-		int posicionX = carrilNorte->getXCentro();
+		int posicionX = carril->getXCentro();
 		int posicionY = 600;
 		if (!carros->autoAqui(posicionX, posicionY)) {
 
@@ -55,7 +62,8 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ f, i
 void Simulador::setNivelTrafico(int nivel) {
 	this->nivelTrafico = nivel;
 }
-void Simulador::Dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
-	carriles->dibujar(graph, fig);
-	carros->dibujar(graph, fig);
+void Simulador::Dibujar(BufferedGraphics^ graph, Bitmap^ autos, Bitmap^ semaforo) {
+	semaforos->dibujar(graph, semaforo);
+	carriles->dibujar(graph, autos);
+	carros->dibujar(graph, autos);
 }

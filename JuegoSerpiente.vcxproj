@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="Auto.cpp" />
     <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="Semaforo.cpp" />
     <ClCompile Include="Simulador.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +137,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Auto.hpp" />
+    <ClInclude Include="Semaforo.h" />
     <ClInclude Include="Simulador.h" />
   </ItemGroup>
   <ItemGroup>
