@@ -10,6 +10,10 @@ namespace TraficoVehicular {
 		duracionAmarillo = 20;
 	}
 
+	Point Semaforo::getPosicion() {
+		return Point(x, y);
+	}
+
 	void Semaforo::Cambiar() {
 		timer++;
 		if (timer >= duracionAmarillo && estadoActual == EstadoSemaforo::Amarillo) {

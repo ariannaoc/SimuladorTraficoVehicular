@@ -4,6 +4,7 @@ using namespace System::Drawing;
 using namespace TraficoVehicular;
 
 Simulador::Simulador() {
+	nivelTrafico = 1;
 	tiempo = 0;
 
 	semaforos = gcnew Lista<Semaforo^>();
@@ -14,18 +15,15 @@ Simulador::Simulador() {
 	carriles = gcnew Lista<Carril^>();
 	Carril^ carrilNorte = gcnew Carril(Direccion::Norte, 210, 0, 600, semNorte);
 	carriles->agregar(carrilNorte);
-	
+
 
 	carros = gcnew ListaAutos;
 	// Crear 10 autos inicialmente 
 	for (int i = 0; i < 10; i++) {
 		if (!carros->autoAqui(carrilNorte->getXCentro(), 500)) {
-
 			Auto^ nuevoAuto = gcnew Auto(carrilNorte->getXCentro(), 500, 0);
 			nuevoAuto->setCarril(carrilNorte);
 			carros->agregar(nuevoAuto);
-
-			//carros->agregar(gcnew Auto (carrilNorte->getXCentro() + 200, 500, 0));
 		}
 	}
 
@@ -45,7 +43,8 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ auto
 
 		infoAutos = carros->getInfoAutos(mX, mY);
 
-		int intervalo = 25;
+		int intervalo;
+		if (nivelTrafico == 1) intervalo = 25;
 		if (nivelTrafico == 2) intervalo = 15;
 		if (nivelTrafico == 3) intervalo = 5;
 
@@ -54,10 +53,13 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ auto
 		if (!carros->autoAqui(posicionX, posicionY)) {
 
 			if (tiempo % intervalo == 0) {
-				Motor* m = new Motor(1, 2, 3, 4, 5);
 				Auto^ a = gcnew Auto(posicionX, posicionY, 0);
-				a->setMotor(m);
-				a->setCarril(carril); 
+				if (rand() % 99 < 50)
+					a->setMotor(new Motor(2, 4, 6, 8, 10));
+				else
+					a->setMotor(new Motor(3, 5, 8, 10, 15));
+
+				a->setCarril(carril);
 				carros->agregar(a);
 			}
 		}

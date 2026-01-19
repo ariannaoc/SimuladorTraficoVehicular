@@ -105,19 +105,30 @@ namespace TraficoVehicular {
 		if (autosCercanos != nullptr && autosCercanos->tieneElementos()) {
 			alertaColision = true;
 		}
-
+		// Posicion del semaforo 
+		int semaforoX = carrilActual->getSemaforo()->getPosicion().X;
+		int semaforoY = carrilActual->getSemaforo()->getPosicion().Y;
 		// Evaluar el semáforo del carril actual
-		 EstadoSemaforo semaforo = carrilActual->getSemaforo()->estadoActual;
+		EstadoSemaforo semaforo = carrilActual->getSemaforo()->estadoActual;
 
-		if (alertaColision || semaforo == EstadoSemaforo::Rojo) {
+
+		// Tomar decisiones basadas en el semáforo y la presencia de otros autos
+		if (alertaColision) {
 			// Frenar el auto gradualmente
 			if (this->marcha > 0) this->marcha--;
 			this->motor->frenar(this->marcha);
-		} else if(semaforo == EstadoSemaforo::Amarillo) {
+		}
+		else if (semaforo == EstadoSemaforo::Rojo && y > semaforoY) {
+			// Frenar el auto gradualmente
+			if (this->marcha > 0) this->marcha--;
+			this->motor->frenar(this->marcha);
+		}
+		else if (semaforo == EstadoSemaforo::Amarillo && y > semaforoY) {
 			// Reducir la velocidad del auto a marcha 1
 			if (this->marcha > 1) this->marcha--;
 			this->motor->frenar(this->marcha);
-		} else {
+		}
+		else {
 			// Acelerar el auto gradualmente
 			if (this->tiempo % 5 == 0 && this->marcha < 5) {
 				this->marcha++;

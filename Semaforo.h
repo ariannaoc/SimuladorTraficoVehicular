@@ -17,6 +17,7 @@ namespace TraficoVehicular {
 
 		Semaforo(int xx, int yy);
 		void Dibujar(BufferedGraphics^ graph, Bitmap^ semaforo);
-		void Cambiar(); 
+		void Cambiar();
+		Point getPosicion(); 
 	};
 }

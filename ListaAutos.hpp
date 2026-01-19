@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace TraficoVehicular {
-	
+
 	ref class ListaAutos : public Lista<Auto^>
 	{
 	private:
@@ -13,7 +13,7 @@ namespace TraficoVehicular {
 	public:
 		ListaAutos() {
 			autoHovered = nullptr;
-			hoverTimer = 2000; 
+			hoverTimer = 2000;
 		}
 
 		void setHoverTimer(int ht) {
@@ -26,9 +26,9 @@ namespace TraficoVehicular {
 
 				//Asignar motor aleatoriamente usando probabilidad 
 				if (rand() % 99 < 50)
-					aux->contenido->setMotor(new Motor(1, 2, 4, 6, 10));
+					aux->contenido->setMotor(new Motor(2, 4, 6, 8, 10));
 				else
-					aux->contenido->setMotor(new Motor(1, 3, 5, 8, 12));
+					aux->contenido->setMotor(new Motor(3, 5, 8, 10, 12));
 
 				aux = aux->next;
 			}
@@ -59,7 +59,7 @@ namespace TraficoVehicular {
 					aux->contenido->getCampoVisualx(), aux->contenido->getCampoVisualy(),
 					aux->contenido->getCampoVisualAncho(), aux->contenido->getCampoVisualAlto(),
 					x, y)) {
-					return true; 
+					return true;
 				}
 				aux = aux->next;
 			}
@@ -92,6 +92,7 @@ namespace TraficoVehicular {
 							// Agregar autos a la lista de autos cercanos
 							aux->contenido->autosCercanos->agregar(otro);
 						}
+
 					}
 					aux2 = aux2->next;
 				}
@@ -122,7 +123,7 @@ namespace TraficoVehicular {
 			// Si no hay auto bajo el mouse, mostrar la informacion del ultimo auto hover
 			if (autoHovered != nullptr) {
 				if (hoverTimer > 0) {
-					hoverTimer -= 100; 
+					hoverTimer -= 100;
 					return autoHovered->getInfo();
 				}
 				else {
