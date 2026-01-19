@@ -20,14 +20,13 @@ Simulador::Simulador() {
 	carros = gcnew ListaAutos;
 	// Crear 10 autos inicialmente 
 	for (int i = 0; i < 10; i++) {
-		if (!carros->autoAqui(carrilNorte->getXCentro(), 500)) {
-			Auto^ nuevoAuto = gcnew Auto(carrilNorte->getXCentro(), 500, 0);
-			nuevoAuto->setCarril(carrilNorte);
+		if (!carros->autoAqui(carrilNorte->getXOrigen(), carrilNorte->getYOrigen())) {
+			Auto^ nuevoAuto = gcnew Auto(carrilNorte);
 			carros->agregar(nuevoAuto);
 		}
 	}
-
 	carros->agregarMotores();
+	
 }
 void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ autos, int mX, int mY, Bitmap^ semaforo) {
 	tiempo++;
@@ -43,7 +42,7 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ auto
 
 		infoAutos = carros->getInfoAutos(mX, mY);
 
-		int intervalo;
+		int intervalo = 25;
 		if (nivelTrafico == 1) intervalo = 25;
 		if (nivelTrafico == 2) intervalo = 15;
 		if (nivelTrafico == 3) intervalo = 5;
@@ -53,13 +52,12 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ auto
 		if (!carros->autoAqui(posicionX, posicionY)) {
 
 			if (tiempo % intervalo == 0) {
-				Auto^ a = gcnew Auto(posicionX, posicionY, 0);
+				Auto^ a = gcnew Auto(carril);
 				if (rand() % 99 < 50)
 					a->setMotor(new Motor(2, 4, 6, 8, 10));
 				else
 					a->setMotor(new Motor(3, 5, 8, 10, 15));
 
-				a->setCarril(carril);
 				carros->agregar(a);
 			}
 		}

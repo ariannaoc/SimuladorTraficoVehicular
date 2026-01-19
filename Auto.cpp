@@ -3,20 +3,25 @@
 
 namespace TraficoVehicular {
 
-	Auto::Auto(int xx, int yy, int dir) {
-		x = xx;
-		y = yy;
+	Auto::Auto(Carril^ carril) {
+		direccion = carril->getSentido();
+		x = carril->getXOrigen();
+		y = carril->getYOrigen();
+
 		velocidad = 0;
 		tiempo = 0;
 		marcha = 0;
 		color = rand() % 6;
-		angulo = dir == 1 ? 90 : dir == 2 ? 0 : dir == 3 ? 180 : 270;
+		if (direccion == Direccion::Este)  angulo = 0;
+		if (direccion == Direccion::Sur)   angulo = 90;
+		if (direccion == Direccion::Oeste) angulo = 180;
+		if (direccion == Direccion::Norte) angulo = 270;
+
 		anguloObjetivo = 0;
-		direccion = dir;
 		estado = 0;
 		autosCercanos = nullptr;
 		motor = nullptr;
-		carrilActual = nullptr;
+		carrilActual = carril;
 	}
 
 	Auto::~Auto() {
@@ -66,10 +71,10 @@ namespace TraficoVehicular {
 			angulo += 90;
 
 		// Actualizar dirección cardinal
-		if (angulo == 0 || angulo == 360) direccion = 2;      // Este
-		else if (angulo == 90)           direccion = 1;      // Sur
-		else if (angulo == 180)          direccion = 3;      // Oeste
-		else if (angulo == 270 || angulo == -90) direccion = 0; // Norte
+		if (angulo == 0 || angulo == 360) direccion = Direccion::Este;
+		else if (angulo == 90)           direccion = Direccion::Sur;
+		else if (angulo == 180)          direccion = Direccion::Oeste;
+		else if (angulo == 270 || angulo == -90) direccion = Direccion::Norte;
 	}
 
 	// Las dimensiones del campo visual cambian segun en angulo del auto 
@@ -108,22 +113,38 @@ namespace TraficoVehicular {
 		// Posicion del semaforo 
 		int semaforoX = carrilActual->getSemaforo()->getPosicion().X;
 		int semaforoY = carrilActual->getSemaforo()->getPosicion().Y;
+
 		// Evaluar el semáforo del carril actual
 		EstadoSemaforo semaforo = carrilActual->getSemaforo()->estadoActual;
 
+		bool antesSemaforo = false;
 
+		switch (direccion) {
+		case Direccion::Norte:
+			antesSemaforo = (y > semaforoY);
+			break;
+		case Direccion::Sur:
+			antesSemaforo = (y < semaforoY);
+			break;
+		case Direccion::Este:
+			antesSemaforo = (x < semaforoX);
+			break;
+		case Direccion::Oeste:
+			antesSemaforo = (x > semaforoX);
+			break;
+		}
 		// Tomar decisiones basadas en el semáforo y la presencia de otros autos
 		if (alertaColision) {
 			// Frenar el auto gradualmente
 			if (this->marcha > 0) this->marcha--;
 			this->motor->frenar(this->marcha);
 		}
-		else if (semaforo == EstadoSemaforo::Rojo && y > semaforoY) {
+		else if (semaforo == EstadoSemaforo::Rojo && antesSemaforo) {
 			// Frenar el auto gradualmente
 			if (this->marcha > 0) this->marcha--;
 			this->motor->frenar(this->marcha);
 		}
-		else if (semaforo == EstadoSemaforo::Amarillo && y > semaforoY) {
+		else if (semaforo == EstadoSemaforo::Amarillo && antesSemaforo) {
 			// Reducir la velocidad del auto a marcha 1
 			if (this->marcha > 1) this->marcha--;
 			this->motor->frenar(this->marcha);
@@ -193,18 +214,11 @@ namespace TraficoVehicular {
 	}
 
 	bool Auto::isHover(int mouseX, int mouseY) {
-		// Posicion del mouse y del auto
-		//std::cout << "Mouse: (" << mouseX << "," << mouseY << ") Auto: (" << x << "," << y << ")" << std::endl;
-
 		if (mouseX >= x && mouseX <= (x + anchoAuto) &&
 			mouseY >= y && mouseY <= (y + altoAuto)) {
 			return true;
 		}
 		return false;
-	}
-
-	void Auto::setCarril(Carril^ c) {
-		carrilActual = c;
 	}
 
 

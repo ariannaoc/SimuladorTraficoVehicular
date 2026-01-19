@@ -22,12 +22,12 @@ namespace TraficoVehicular {
 		Motor* motor;
 		int angulo;        // dirección en grados
 		int anguloObjetivo;
-		int direccion; // 0 Norte, 1 Sur, 2 Este, 3 Oeste .
+		Direccion direccion; 
 		bool estado; // 0 estacionado, 1 andando 
 		Lista<Auto^>^ autosCercanos;
 		Carril^ carrilActual;
 
-		Auto(int xx, int yy, int dir);
+		Auto(Carril^ carril);
 		~Auto();
 
 		void setMotor(Motor* m);
@@ -45,8 +45,6 @@ namespace TraficoVehicular {
 		void Mover();
 		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig);
 		bool isHover(int mouseX, int mouseY);
-		void setCarril(Carril^ c);
-
 	};
 }
 

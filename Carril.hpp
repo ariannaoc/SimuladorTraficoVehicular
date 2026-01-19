@@ -43,6 +43,24 @@ namespace TraficoVehicular {
 			return x + (ancho - anchoAuto) / 2; // centro del carril
 		}
 
+		int getYCentro() {
+			return y + (alto - altoAuto) / 2; // centro del carril
+		}
+
+		// En Carril.cpp
+		int Carril::getXOrigen() {
+			if (sentido == Direccion::Este) return -50;
+			if (sentido == Direccion::Oeste) return 800; 
+			return getXCentro();
+		}
+
+		int Carril::getYOrigen() {
+			if (sentido == Direccion::Norte) return 600;
+			if (sentido == Direccion::Sur) return -50;
+			return getYCentro();
+		}
+
+
 		Semaforo^ getSemaforo() { return semaforo; }
 
 		// Dibuja el carril como un rectángulo

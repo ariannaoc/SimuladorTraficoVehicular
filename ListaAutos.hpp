@@ -34,35 +34,33 @@ namespace TraficoVehicular {
 			}
 		}
 		// Verifica si un auto esta dentro del campo visual de otro auto
-		bool visualizado(int x, int y, int cvx, int cvy, int anchocv, int altocv, int ax, int ay) {
-			// Dentro de limites horizontales
-			if (ax >= cvx && ax <= cvx + anchocv) {
-				// Dentro de limites verticales
-				if (ay >= cvy && ay <= cvy + altocv) {
-					return true;
-				}
-			}
-			return false;
+		bool rectsChocan(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
+			return !(x1 + w1 < x2 || x1 > x2 + w2 || y1 + h1 < y2 || y1 > y2 + h2);
 		}
+
+		bool visualizado(int cvx, int cvy, int anchocv, int altocv, Auto^ otro) {
+			// Compara el Campo Visual recibido con el cuerpo del auto 'otro'
+			return rectsChocan(cvx, cvy, anchocv, altocv, otro->x, otro->y, anchoAuto, altoAuto);
+		}
+
+
 		//  Verifica si hay un auto en ese espacio 
+
 		bool autoAqui(int x, int y) {
 			Nodo<Auto^>^ aux = head;
 			while (aux != nullptr) {
-				if (x < aux->contenido->x + anchoAuto &&
-					x + anchoAuto > aux->contenido->x &&
-					y < aux->contenido->y + altoAuto &&
-					y + altoAuto > aux->contenido->y) {
+				if (rectsChocan(x, y, anchoAuto, altoAuto, aux->contenido->x, aux->contenido->y, anchoAuto, altoAuto)) {
 					return true;
 				}
-				// Está en el campo de vision de otro auto
-				if (visualizado(aux->contenido->x, aux->contenido->y,
+
+				if (rectsChocan(x, y, anchoAuto, altoAuto,
 					aux->contenido->getCampoVisualx(), aux->contenido->getCampoVisualy(),
-					aux->contenido->getCampoVisualAncho(), aux->contenido->getCampoVisualAlto(),
-					x, y)) {
+					aux->contenido->getCampoVisualAncho(), aux->contenido->getCampoVisualAlto())) {
 					return true;
 				}
 				aux = aux->next;
 			}
+			
 			return false;
 		}
 
@@ -84,10 +82,13 @@ namespace TraficoVehicular {
 						Auto^ otro = aux2->contenido;
 						// Verificar si el otro auto esta en el campo visual del auto1
 
-						if (visualizado(aux->contenido->x, aux->contenido->y,
-							aux->contenido->getCampoVisualx(), aux->contenido->getCampoVisualy(),
-							aux->contenido->getCampoVisualAncho(), aux->contenido->getCampoVisualAlto(),
-							otro->x, otro->y))
+						if (visualizado(
+							aux->contenido->getCampoVisualx(),
+							aux->contenido->getCampoVisualy(),
+							aux->contenido->getCampoVisualAncho(),
+							aux->contenido->getCampoVisualAlto(),
+							otro))
+							
 						{
 							// Agregar autos a la lista de autos cercanos
 							aux->contenido->autosCercanos->agregar(otro);
@@ -114,7 +115,6 @@ namespace TraficoVehicular {
 			while (aux != nullptr) {
 				// Si hay un auto bajo el mouse, mostrar su informacion
 				if (aux->contenido->isHover(mX, mY)) {
-					System::Console::WriteLine(aux->contenido->getInfo());
 					autoHovered = aux->contenido;
 					return aux->contenido->getInfo();
 				}
