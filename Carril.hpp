@@ -43,6 +43,8 @@ namespace TraficoVehicular {
 			return x + (ancho - anchoAuto) / 2; // centro del carril
 		}
 
+		Semaforo^ getSemaforo() { return semaforo; }
+
 		// Dibuja el carril como un rectángulo
 		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
 			Graphics^ g = graph->Graphics;

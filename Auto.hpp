@@ -25,7 +25,7 @@ namespace TraficoVehicular {
 		int direccion; // 0 Norte, 1 Sur, 2 Este, 3 Oeste .
 		bool estado; // 0 estacionado, 1 andando 
 		Lista<Auto^>^ autosCercanos;
-		//Carril^ carrilActual;
+		Carril^ carrilActual;
 
 		Auto(int xx, int yy, int dir);
 		~Auto();
@@ -45,6 +45,8 @@ namespace TraficoVehicular {
 		void Mover();
 		void Dibujar(BufferedGraphics^ graph, Bitmap^ fig);
 		bool isHover(int mouseX, int mouseY);
+		void setCarril(Carril^ c);
+
 	};
 }
 

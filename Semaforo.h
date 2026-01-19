@@ -10,6 +10,7 @@ namespace TraficoVehicular {
 	private:
 		int timer;
 		int duracionEstado;
+		int duracionAmarillo;
 	public:
 		int x, y; // Posición del semáforo
 		EstadoSemaforo estadoActual;

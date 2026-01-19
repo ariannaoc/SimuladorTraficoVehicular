@@ -4,19 +4,21 @@ namespace TraficoVehicular {
 	Semaforo::Semaforo(int xx, int yy) {
 		x = xx + 200;
 		y = yy;
-		estadoActual = EstadoSemaforo::Rojo;
+		estadoActual = EstadoSemaforo::Verde;
 		timer = 0;
 		duracionEstado = 50;
+		duracionAmarillo = 20;
 	}
 
 	void Semaforo::Cambiar() {
 		timer++;
+		if (timer >= duracionAmarillo && estadoActual == EstadoSemaforo::Amarillo) {
+			estadoActual = EstadoSemaforo::Rojo;
+			timer = 0;
+		}
 		if (timer >= duracionEstado) {
 			if (estadoActual == EstadoSemaforo::Verde)
 				estadoActual = EstadoSemaforo::Amarillo;
-
-			else if (estadoActual == EstadoSemaforo::Amarillo)
-				estadoActual = EstadoSemaforo::Rojo;
 
 			else if (estadoActual == EstadoSemaforo::Rojo)
 				estadoActual = EstadoSemaforo::Verde;

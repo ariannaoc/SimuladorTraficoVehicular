@@ -16,6 +16,7 @@ namespace TraficoVehicular {
 		estado = 0;
 		autosCercanos = nullptr;
 		motor = nullptr;
+		carrilActual = nullptr;
 	}
 
 	Auto::~Auto() {
@@ -105,20 +106,23 @@ namespace TraficoVehicular {
 			alertaColision = true;
 		}
 
+		// Evaluar el semáforo del carril actual
+		 EstadoSemaforo semaforo = carrilActual->getSemaforo()->estadoActual;
 
-		if (alertaColision) {
+		if (alertaColision || semaforo == EstadoSemaforo::Rojo) {
 			// Frenar el auto gradualmente
+			if (this->marcha > 0) this->marcha--;
 			this->motor->frenar(this->marcha);
-		}
-		else {
+		} else if(semaforo == EstadoSemaforo::Amarillo) {
+			// Reducir la velocidad del auto a marcha 1
+			if (this->marcha > 1) this->marcha--;
+			this->motor->frenar(this->marcha);
+		} else {
 			// Acelerar el auto gradualmente
-			if (this->tiempo % 5 == 0) {
-				if (this->tiempo < 28 && this->marcha < 5) this->marcha++;
-				else if (this->tiempo > 28 && this->marcha > 0) this->marcha--;
+			if (this->tiempo % 5 == 0 && this->marcha < 5) {
+				this->marcha++;
 			}
-			if (this->tiempo < 28) {
-				this->motor->acelerar(this->marcha);
-			}
+			this->motor->acelerar(this->marcha);
 		}
 
 		// Actualizar la velocidad del Auto con la del Motor
@@ -186,6 +190,10 @@ namespace TraficoVehicular {
 			return true;
 		}
 		return false;
+	}
+
+	void Auto::setCarril(Carril^ c) {
+		carrilActual = c;
 	}
 
 

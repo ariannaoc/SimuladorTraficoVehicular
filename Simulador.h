@@ -8,7 +8,6 @@ namespace TraficoVehicular {
 	private: 
 		int tiempo; 
 		int nivelTrafico; // 1: bajo, 2: medio, 3: alto
-		// Lista de autos
 		ListaAutos^ carros;
 		Lista<Carril^>^ carriles;
 		Lista<Semaforo^>^ semaforos;
