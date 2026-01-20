@@ -118,19 +118,20 @@ namespace TraficoVehicular {
 		EstadoSemaforo semaforo = carrilActual->getSemaforo()->estadoActual;
 
 		bool antesSemaforo = false;
+		int lineaStop = 100;	
 
 		switch (direccion) {
 		case Direccion::Norte:
-			antesSemaforo = (y > semaforoY);
+			antesSemaforo = (y > semaforoY + lineaStop);
 			break;
 		case Direccion::Sur:
-			antesSemaforo = (y < semaforoY);
+			antesSemaforo = (y < semaforoY - lineaStop);
 			break;
 		case Direccion::Este:
-			antesSemaforo = (x < semaforoX);
+			antesSemaforo = (x < semaforoX - lineaStop);
 			break;
 		case Direccion::Oeste:
-			antesSemaforo = (x > semaforoX);
+			antesSemaforo = (x > semaforoX + lineaStop);
 			break;
 		}
 		// Tomar decisiones basadas en el semáforo y la presencia de otros autos
@@ -169,6 +170,7 @@ namespace TraficoVehicular {
 		}
 
 	}
+
 
 	void Auto::Mover() {
 		// Mover el auto según su velocidad y ángulo
