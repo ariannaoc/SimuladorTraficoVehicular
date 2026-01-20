@@ -9,13 +9,13 @@ Simulador::Simulador() {
 
 	semaforos = gcnew Lista<Semaforo^>();
 
-	Semaforo^ semNorte = gcnew Semaforo(340, 135, Direccion::Norte);
+	Semaforo^ semNorte = gcnew Semaforo(335, 135, Direccion::Norte);
 	semaforos->agregar(semNorte);
 	semNorte->Cambiar();
-	Semaforo^ semEste = gcnew Semaforo(540, 150, Direccion::Este);
+	Semaforo^ semEste = gcnew Semaforo(550, 150, Direccion::Este);
 	semaforos->agregar(semEste);
 	semEste->Cambiar();
-	Semaforo^ semSur = gcnew Semaforo(525, 350, Direccion::Sur);
+	Semaforo^ semSur = gcnew Semaforo(540, 360, Direccion::Sur);
 	semaforos->agregar(semSur);
 	semSur->Cambiar();
 	Semaforo^ semOeste = gcnew Semaforo(325, 345, Direccion::Oeste);
@@ -24,7 +24,7 @@ Simulador::Simulador() {
 
 
 	carriles = gcnew Lista<Carril^>();
-	Carril^ carrilNorte = gcnew Carril(Direccion::Norte, 375, 0, 600, anchoAuto +20, semNorte);
+	Carril^ carrilNorte = gcnew Carril(Direccion::Norte, 375, 0, 600, anchoAuto + 20, semNorte);
 	carriles->agregar(carrilNorte);
 	Carril^ carrilSur = gcnew Carril(Direccion::Sur, 475, 0, 600, anchoAuto + 20, semSur);
 	carriles->agregar(carrilSur);
@@ -32,41 +32,41 @@ Simulador::Simulador() {
 	carriles->agregar(carrilEste);
 	Carril^ carrilOeste = gcnew Carril(Direccion::Oeste, 150, 300, anchoAuto + 20, 600, semOeste);
 	carriles->agregar(carrilOeste);
-	
+
 	carros = gcnew ListaAutos;
-	
+
 }
 
 void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ autos, int mX, int mY, Bitmap^ semaforo) {
-    tiempo++;
-    this->Dibujar(g, autos, semaforo);
+	tiempo++;
+	this->Dibujar(g, autos, semaforo);
 
-    if (inicio) {
+	if (inicio) {
 		//Sincronozacion de semaforos
-        
-        Nodo<Semaforo^>^ nodoSem = semaforos->getHead();
-        // Recorre la lista de semáforos
-        while (nodoSem != nullptr) {
-            Semaforo^ s = nodoSem->contenido;
-            Direccion dir = s->getDireccion();
 
-            if ((tiempo / s->getDuracionEstado()) % 2 == 0) {
-                // Norte y Sur en Verde, los demás en Rojo
-                if (dir == Direccion::Norte || dir == Direccion::Sur) s->setEstado(EstadoSemaforo::Verde);
-                else s->setEstado(EstadoSemaforo::Rojo);
-            }
-            else {
-                // Este y Oeste en Verde, los demás en Rojo
-                if (dir == Direccion::Este || dir == Direccion::Oeste) s->setEstado(EstadoSemaforo::Verde);
-                else s->setEstado(EstadoSemaforo::Rojo);
-            }
-            nodoSem = nodoSem->next;
-        }
+		Nodo<Semaforo^>^ nodoSem = semaforos->getHead();
+		// Recorre la lista de semáforos
+		while (nodoSem != nullptr) {
+			Semaforo^ s = nodoSem->contenido;
+			Direccion dir = s->getDireccion();
+
+			if ((tiempo / s->getDuracionEstado()) % 2 == 0) {
+				// Norte y Sur en Verde, los demás en Rojo
+				if (dir == Direccion::Norte || dir == Direccion::Sur) s->setEstado(EstadoSemaforo::Verde);
+				else s->setEstado(EstadoSemaforo::Rojo);
+			}
+			else {
+				// Este y Oeste en Verde, los demás en Rojo
+				if (dir == Direccion::Este || dir == Direccion::Oeste) s->setEstado(EstadoSemaforo::Verde);
+				else s->setEstado(EstadoSemaforo::Rojo);
+			}
+			nodoSem = nodoSem->next;
+		}
 
 		//logica de movimiento de autos
-        carros->tomarDecision();
-        carros->mover();
-        infoAutos = carros->getInfoAutos(mX, mY);
+		carros->tomarDecision();
+		carros->mover();
+		infoAutos = carros->getInfoAutos(mX, mY);
 
 
 		int intervalo = 25; // nivelTrafico 1 por defecto

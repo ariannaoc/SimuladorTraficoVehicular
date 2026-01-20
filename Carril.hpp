@@ -3,8 +3,8 @@
 using namespace System::Drawing;
 using namespace System::Drawing::Drawing2D;
 namespace TraficoVehicular {
-	const int altoAuto = 30;
-	const int anchoAuto = 20;
+	const int altoAuto = 40;
+	const int anchoAuto = 30;
 
 	ref class Carril {
 	private:
