@@ -6,14 +6,6 @@ namespace TraficoVehicular {
 	const int altoAuto = 30;
 	const int anchoAuto = 20;
 
-	enum Direccion {
-		Norte = 0,
-		Sur = 1,
-		Este = 2,
-		Oeste = 3
-	};
-
-
 	ref class Carril {
 	private:
 		int x, y; // Posición del carril
@@ -23,11 +15,11 @@ namespace TraficoVehicular {
 		Semaforo^ semaforo; // Semáforo asociado al carril 
 
 	public:
-		Carril(Direccion sentido, int xx, int yy, int alt, Semaforo^ sem) {
-			sentido = sentido;
-			x = xx +200;
+		Carril(Direccion s, int xx, int yy, int alt, int anch, Semaforo^ sem) {
+			sentido = s;
+			x = xx;
 			y = yy;
-			ancho = anchoAuto + 20;
+			ancho = anch;
 			alto = alt;
 			semaforo = sem;
 
@@ -40,6 +32,7 @@ namespace TraficoVehicular {
 		Direccion getSentido() { return sentido; }
 
 		int getXCentro() {
+
 			return x + (ancho - anchoAuto) / 2; // centro del carril
 		}
 
@@ -47,7 +40,6 @@ namespace TraficoVehicular {
 			return y + (alto - altoAuto) / 2; // centro del carril
 		}
 
-		// En Carril.cpp
 		int Carril::getXOrigen() {
 			if (sentido == Direccion::Este) return -50;
 			if (sentido == Direccion::Oeste) return 800; 

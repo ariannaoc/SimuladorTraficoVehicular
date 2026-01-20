@@ -6,6 +6,8 @@ using namespace System::Drawing;
 namespace TraficoVehicular {
 		public enum EstadoSemaforo { Verde = 0, Amarillo = 1, Rojo = 2 };
 
+		public enum Direccion { Norte = 0, Sur = 1, Este = 2, Oeste = 3 };
+
 	ref class Semaforo {
 	private:
 		int timer;
@@ -14,10 +16,15 @@ namespace TraficoVehicular {
 	public:
 		int x, y; // Posición del semáforo
 		EstadoSemaforo estadoActual;
+		Direccion sentido;
 
-		Semaforo(int xx, int yy);
-		void Dibujar(BufferedGraphics^ graph, Bitmap^ semaforo);
-		void Cambiar();
+		Semaforo(int xx, int yy, Direccion s);
 		Point getPosicion(); 
+		Direccion getDireccion();
+		int getDuracionEstado();
+		void Cambiar();
+		void setEstado(EstadoSemaforo e);
+		void Dibujar(BufferedGraphics^ graph, Bitmap^ semaforo);
+
 	};
 }

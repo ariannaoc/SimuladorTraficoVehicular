@@ -53,6 +53,10 @@ namespace TraficoVehicular {
 			return nullptr;
 		}
 
+		Nodo<D>^ getHead() {
+			return head;
+		}
+
 		void dibujar(BufferedGraphics^ graph, Bitmap^ fig) {
 			Nodo<D>^ aux = head;
 			while (aux != nullptr) {
