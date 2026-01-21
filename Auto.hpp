@@ -39,6 +39,8 @@ namespace TraficoVehicular {
 		int getCampoVisualy();
 		int getCampoVisualAncho();
 		int getCampoVisualAlto();
+		Carril^ getCarril();
+		bool estaAdelante(Auto^ otro);
 
 		void girar(int giro);
 		void tomarDecision();

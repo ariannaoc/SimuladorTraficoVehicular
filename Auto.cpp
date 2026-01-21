@@ -102,14 +102,23 @@ namespace TraficoVehicular {
 		return y + (altoAuto - getCampoVisualAlto()) / 2;
 	}
 
+	Carril^ Auto::getCarril() {
+		return carrilActual;
+	}
+
+	bool Auto::estaAdelante(Auto^ a) {
+		switch (this->direccion) {
+		case Direccion::Norte: return a->y < this->y; 
+		case Direccion::Sur:   return a->y > this->y;
+		case Direccion::Este:  return a->x > this->x;
+		case Direccion::Oeste: return a->x < this->x;
+		}
+		return false;
+	}
+
 	void Auto::tomarDecision() {
 		tiempo++;
-
-		bool alertaColision = false;
-
-		if (autosCercanos != nullptr && autosCercanos->tieneElementos()) {
-			alertaColision = true;
-		}
+		
 		// Posicion del semaforo 
 		int semaforoX = carrilActual->getSemaforo()->getPosicion().X;
 		int semaforoY = carrilActual->getSemaforo()->getPosicion().Y;
@@ -118,22 +127,42 @@ namespace TraficoVehicular {
 		EstadoSemaforo semaforo = carrilActual->getSemaforo()->estadoActual;
 
 		bool antesSemaforo = false;
-		int lineaStop = 100;	
+		int lineaStop = 200;	
 
 		switch (direccion) {
-		case Direccion::Norte:
+		case Direccion::Norte: 
 			antesSemaforo = (y > semaforoY + lineaStop);
 			break;
-		case Direccion::Sur:
+		case Direccion::Sur: 
 			antesSemaforo = (y < semaforoY - lineaStop);
 			break;
-		case Direccion::Este:
+		case Direccion::Este: 
 			antesSemaforo = (x < semaforoX - lineaStop);
 			break;
 		case Direccion::Oeste:
 			antesSemaforo = (x > semaforoX + lineaStop);
 			break;
 		}
+
+		bool alertaColision = false;
+		if (autosCercanos != nullptr && autosCercanos->tieneElementos()) {
+			//Recorrer la lista de autos cercanos
+			Nodo<Auto^>^ aux = autosCercanos->getHead();
+			while (aux != nullptr) {
+				Auto^ otro = aux->contenido;
+
+				// Verificar si el auto está en el mismo carril
+				if (this->carrilActual == aux->contenido->getCarril()) {
+
+					if (estaAdelante(otro)) {
+						alertaColision = true;
+						break;
+					}
+				}
+				aux = aux->next;
+			}
+		}
+
 		// Tomar decisiones basadas en el semáforo y la presencia de otros autos
 		if (alertaColision) {
 			// Frenar el auto gradualmente
@@ -210,8 +239,8 @@ namespace TraficoVehicular {
 		graph->Graphics->Restore(estado);
 
 		// Solo para depuración: dibuja el campo visual en rojo transparente
-		Pen^ p = gcnew Pen(Color::FromArgb(100, Color::Red));
-		graph->Graphics->DrawRectangle(p, getCampoVisualx(), getCampoVisualy(), getCampoVisualAncho(), getCampoVisualAlto());
+		/*Pen^ p = gcnew Pen(Color::FromArgb(100, Color::Red));
+		graph->Graphics->DrawRectangle(p, getCampoVisualx(), getCampoVisualy(), getCampoVisualAncho(), getCampoVisualAlto());*/
 
 	}
 
