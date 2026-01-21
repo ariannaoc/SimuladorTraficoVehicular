@@ -64,6 +64,7 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ auto
 		infoAutos = carros->getInfoAutos(mX, mY);
 
 		int intervalo = 25; // nivelTrafico 1 por defecto
+		if (nivelTrafico == 1) intervalo = 25;
 		if (nivelTrafico == 2) intervalo = 15;
 		if (nivelTrafico == 3) intervalo = 5;
 
