@@ -8,7 +8,7 @@ Simulador::Simulador() {
 	tiempo = 0;
 
 	semaforos = gcnew Lista<Semaforo^>();
-
+	// Creacion de semaforos
 	Semaforo^ semNorte = gcnew Semaforo(335, 135, Direccion::Norte);
 	semaforos->agregar(semNorte);
 	semNorte->Cambiar();
@@ -22,8 +22,15 @@ Simulador::Simulador() {
 	semaforos->agregar(semOeste);
 	semOeste->Cambiar();
 
+	// Sincronozacion de semaforos
+	semNorte->setEstado(EstadoSemaforo::Verde);
+	semSur->setEstado(EstadoSemaforo::Verde);
+	semEste->setEstado(EstadoSemaforo::Rojo);
+	semOeste->setEstado(EstadoSemaforo::Rojo);
 
+	
 	carriles = gcnew Lista<Carril^>();
+	// Creacion de carriles
 	Carril^ carrilNorte = gcnew Carril(Direccion::Norte, 375, 0, 600, anchoAuto + 20, semNorte);
 	carriles->agregar(carrilNorte);
 	Carril^ carrilSur = gcnew Carril(Direccion::Sur, 475, 0, 600, anchoAuto + 20, semSur);
@@ -33,6 +40,7 @@ Simulador::Simulador() {
 	Carril^ carrilOeste = gcnew Carril(Direccion::Oeste, 150, 300, anchoAuto + 20, 600, semOeste);
 	carriles->agregar(carrilOeste);
 
+	// Creacion de lista de autos
 	carros = gcnew ListaAutos;
 
 }
@@ -42,37 +50,22 @@ void Simulador::IniciarSimulacion(bool inicio, BufferedGraphics^ g, Bitmap^ auto
 	this->Dibujar(g, autos, semaforo);
 
 	if (inicio) {
-		//Sincronozacion de semaforos
 
 		Nodo<Semaforo^>^ nodoSem = semaforos->getHead();
 		// Recorre la lista de semáforos
 		while (nodoSem != nullptr) {
-			Semaforo^ s = nodoSem->contenido;
-			Direccion dir = s->getDireccion();
-
-			if ((tiempo / s->getDuracionEstado()) % 2 == 0) {
-				// Norte y Sur en Verde, los demás en Rojo
-				if (dir == Direccion::Norte || dir == Direccion::Sur) s->setEstado(EstadoSemaforo::Verde);
-				else s->setEstado(EstadoSemaforo::Rojo);
-			}
-			else {
-				// Este y Oeste en Verde, los demás en Rojo
-				if (dir == Direccion::Este || dir == Direccion::Oeste) s->setEstado(EstadoSemaforo::Verde);
-				else s->setEstado(EstadoSemaforo::Rojo);
-			}
+			nodoSem->contenido->Cambiar();
 			nodoSem = nodoSem->next;
 		}
 
-		//logica de movimiento de autos
+		//Logica de movimiento de autos
 		carros->tomarDecision();
 		carros->mover();
 		infoAutos = carros->getInfoAutos(mX, mY);
 
-
 		int intervalo = 25; // nivelTrafico 1 por defecto
 		if (nivelTrafico == 2) intervalo = 15;
 		if (nivelTrafico == 3) intervalo = 5;
-
 
 		Nodo<Carril^>^ nodoCarril = carriles->getHead();
 		// Recorre la lista de carriles

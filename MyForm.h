@@ -68,7 +68,7 @@ namespace TraficoVehicular {
 
 			// sprite 
 			autos = gcnew Bitmap("setAutos-noB.png");
-			semaforo = gcnew Bitmap("Semaforos.png");
+			semaforo = gcnew Bitmap("s.png");
 			simulador = gcnew Simulador();
 			InitializeComponent();
 		}

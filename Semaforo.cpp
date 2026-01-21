@@ -24,19 +24,26 @@ namespace TraficoVehicular {
 
 	void Semaforo::Cambiar() {
 		timer++;
-		if (timer >= duracionAmarillo && estadoActual == EstadoSemaforo::Amarillo) {
-			estadoActual = EstadoSemaforo::Rojo;
-			timer = 0;
-		}
-		if (timer >= duracionEstado) {
-			if (estadoActual == EstadoSemaforo::Verde)
-				estadoActual = EstadoSemaforo::Amarillo;
 
-			else if (estadoActual == EstadoSemaforo::Rojo)
-				estadoActual = EstadoSemaforo::Verde;
 
-			timer = 0;
-		}
+			if (estadoActual == EstadoSemaforo::Verde) {
+				if (timer >= duracionEstado) {
+					estadoActual = EstadoSemaforo::Amarillo;
+					timer = 0; 
+				}
+			}
+			else if (estadoActual == EstadoSemaforo::Amarillo) {
+				if (timer >= duracionAmarillo) {
+					estadoActual = EstadoSemaforo::Rojo;
+					timer = 0; 
+				}
+			}
+			else if (estadoActual == EstadoSemaforo::Rojo) {
+				if (timer >= (duracionEstado + duracionAmarillo)) {
+					estadoActual = EstadoSemaforo::Verde;
+					timer = 0;
+				}
+			}
 	}
 	void Semaforo::setEstado(EstadoSemaforo e) {
 		estadoActual = e;
@@ -48,12 +55,12 @@ namespace TraficoVehicular {
 
 		switch (estadoActual) {
 		case EstadoSemaforo::Verde:    xx = 0;       break;
-		case EstadoSemaforo::Amarillo: xx = 120;     break;
-		case EstadoSemaforo::Rojo:     xx = 120 * 2; break;
+		case EstadoSemaforo::Amarillo: xx = 125;     break;
+		case EstadoSemaforo::Rojo:     xx = 125 * 2; break;
 		}
 
 		Rectangle recorte(xx, 0, 120, fig->Height);
-		Rectangle contenedor(x, y, 25, 50);
+		Rectangle contenedor(x, y, 25, 60);
 
 
 		// Guardar estado gráfico
@@ -92,8 +99,6 @@ namespace TraficoVehicular {
 		// restaurar estado
 		graph->Graphics->Restore(estado);
 
-
-		//graph->Graphics->DrawImage(fig, contenedor, recorte, GraphicsUnit::Pixel);
 	}
 
 }
